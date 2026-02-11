@@ -8,10 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import * as Icons from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { CreateAreaDialog } from "@/components/areas/create-area-dialog";
+import { AreaCard } from "@/components/areas/area-card";
 
 export default async function AreasPage() {
   const supabase = await createClient();
@@ -32,15 +33,16 @@ export default async function AreasPage() {
             Manage the different domains of your life.
           </p>
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Area
-        </Button>
+        <CreateAreaDialog>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Area
+          </Button>
+        </CreateAreaDialog>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {areas.map((area) => {
-          const Icon = (Icons as any)[area.icon || "Circle"] || Icons.Circle;
           const projectCount = area.boards.reduce(
             (acc, board) =>
               acc +
@@ -52,22 +54,7 @@ export default async function AreasPage() {
           );
 
           return (
-            <Link key={area.id} href={`/areas/${area.id}`}>
-              <Card className="hover:border-primary/50 transition-colors">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {area.name}
-                  </CardTitle>
-                  <Icon className="h-4 w-4" style={{ color: area.color }} />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{projectCount}</div>
-                  <p className="text-xs text-muted-foreground">
-                    Active projects across {area.boards.length} boards
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
+            <AreaCard key={area.id} area={area} projectCount={projectCount} />
           );
         })}
       </div>

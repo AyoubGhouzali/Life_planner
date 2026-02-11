@@ -1,0 +1,155 @@
+[00:00:05.449] Server  LOG     
+[00:00:05.449] Server  LOG       We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+[00:00:05.450] Server  LOG       The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+[00:00:05.450] Server  LOG       	- include was updated to add '.next/dev/types/**/*.ts'
+[00:00:05.450] Server  LOG     
+[00:00:05.451] Server  LOG       The following mandatory changes were made to your tsconfig.json:
+
+[00:00:05.451] Server  LOG       	- jsx was set to react-jsx (next.js uses the React automatic runtime)
+[00:00:05.451] Server  LOG     
+[00:00:06.002] Server  LOG     ✓ Ready in 4.6s
+[00:00:29.038] Server  LOG     ○ Compiling / ...
+[00:00:31.859] Server  ERROR   ⨯ ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:35.925] Browser ERROR   uncaughtError: Error: ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:36.284] Browser ERROR   ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:36.284] Browser ERROR   ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:36.972] Browser ERROR   ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:40.335] Browser ERROR   ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:47.333] Browser ERROR   ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:47.333] Browser ERROR   ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+[00:04:47.333] Browser ERROR   ./src/app/globals.css:2:2
+Module not found: Can't resolve 'tw-animate-css'
+  1 | @import "tailwindcss";
+> 2 | @import "tw-animate-css";
+    |  ^
+  3 |
+  4 | @custom-variant dark (&:is(.dark *));
+  5 |
+
+Import trace:
+  Client Component Browser:
+    ./src/app/globals.css [Client Component Browser]
+    ./src/app/layout.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found

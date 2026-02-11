@@ -62,6 +62,25 @@ export async function deleteArea(id: string) {
   revalidatePath("/", "layout");
 }
 
+export async function archiveArea(id: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const area = await db.query.lifeAreas.findFirst({
+    where: and(eq(lifeAreas.id, id), eq(lifeAreas.user_id, user.id)),
+  });
+
+  if (!area) throw new Error("Area not found");
+
+  await db
+    .update(lifeAreas)
+    .set({ is_archived: !area.is_archived, updated_at: new Date() })
+    .where(and(eq(lifeAreas.id, id), eq(lifeAreas.user_id, user.id)));
+
+  revalidatePath("/", "layout");
+}
+
 export async function reorderAreas(orderedIds: string[]) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
