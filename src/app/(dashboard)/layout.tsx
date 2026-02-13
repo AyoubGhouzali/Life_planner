@@ -4,6 +4,10 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { getAreas } from "@/lib/db/queries/areas";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { CommandMenu } from "@/components/layout/command-menu";
+import { GlobalTimer } from "@/components/layout/global-timer";
+import { getRunningTimer } from "@/actions/time-actions";
+import { TimerInitializer } from "@/components/layout/timer-initializer";
 
 export default async function DashboardLayout({
   children,
@@ -17,17 +21,25 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const areas = await getAreas(user.id);
+  const [areas, runningTimer] = await Promise.all([
+    getAreas(user.id),
+    getRunningTimer(user.id)
+  ]);
 
   return (
     <SidebarProvider>
+      <TimerInitializer timer={runningTimer} />
       <AppSidebar areas={areas} />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
           </div>
+          <div className="flex-1 flex justify-center">
+            <CommandMenu />
+          </div>
           <div className="flex items-center gap-4">
+            <GlobalTimer />
             <ThemeToggle />
           </div>
         </header>

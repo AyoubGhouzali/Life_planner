@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
-import { boards, columns, projects, tasks } from "@/lib/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { boards, columns, projects, tasks, notes } from "@/lib/db/schema";
+import { eq, asc, desc } from "drizzle-orm";
 
 export async function getBoardWithData(boardId: string) {
   return await db.query.boards.findFirst({
@@ -13,7 +13,12 @@ export async function getBoardWithData(boardId: string) {
             orderBy: [asc(projects.position)],
             where: eq(projects.is_archived, false),
             with: {
-              tasks: true,
+              tasks: {
+                orderBy: [asc(tasks.position)],
+              },
+              notes: {
+                orderBy: [desc(notes.is_pinned), desc(notes.updated_at)],
+              },
             },
           },
         },

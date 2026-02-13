@@ -270,6 +270,10 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   projectTags: many(projectTags),
 }));
 
+export const notesRelations = relations(notes, ({ one }) => ({
+  project: one(projects, { fields: [notes.project_id], references: [projects.id] }),
+}));
+
 export const tasksRelations = relations(tasks, ({ one, many }) => ({
   project: one(projects, { fields: [tasks.project_id], references: [projects.id] }),
   parentTask: one(tasks, { fields: [tasks.parent_task_id], references: [tasks.id], relationName: "subtasks" }),
@@ -295,4 +299,10 @@ export const goalsRelations = relations(goals, ({ one, many }) => ({
 export const goalProjectsRelations = relations(goalProjects, ({ one }) => ({
   goal: one(goals, { fields: [goalProjects.goal_id], references: [goals.id] }),
   project: one(projects, { fields: [goalProjects.project_id], references: [projects.id] }),
+}));
+
+export const timeEntriesRelations = relations(timeEntries, ({ one }) => ({
+  user: one(profiles, { fields: [timeEntries.user_id], references: [profiles.id] }),
+  project: one(projects, { fields: [timeEntries.project_id], references: [projects.id] }),
+  task: one(tasks, { fields: [timeEntries.task_id], references: [tasks.id] }),
 }));

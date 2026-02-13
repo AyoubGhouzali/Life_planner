@@ -8,13 +8,13 @@ import { Settings2 } from "lucide-react";
 import { KanbanBoard } from "@/components/kanban/board";
 
 interface AreaPageProps {
-  params: {
+  params: Promise<{
     areaId: string;
-  };
+  }>;
 }
 
 export default async function AreaPage({ params }: AreaPageProps) {
-  const { areaId } = params;
+  const { areaId } = await params;
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 

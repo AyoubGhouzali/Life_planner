@@ -19,7 +19,9 @@ export async function createBoard(formData: FormData) {
   const validated = boardSchema.parse({ name, description, areaId });
 
   const [newBoard] = await db.insert(boards).values({
-    ...validated,
+    name: validated.name,
+    description: validated.description,
+    area_id: validated.areaId,
   }).returning();
 
   // Create default columns
@@ -46,7 +48,12 @@ export async function updateBoard(id: string, formData: FormData) {
 
   const [updatedBoard] = await db
     .update(boards)
-    .set({ ...validated, updated_at: new Date() })
+    .set({ 
+      name: validated.name,
+      description: validated.description,
+      area_id: validated.areaId,
+      updated_at: new Date() 
+    })
     .where(eq(boards.id, id))
     .returning();
 

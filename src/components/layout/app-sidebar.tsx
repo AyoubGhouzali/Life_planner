@@ -29,7 +29,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "@/actions/auth-actions";
 import { reorderAreas } from "@/actions/area-actions";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import {
   DndContext,
   closestCorners,
@@ -112,6 +112,7 @@ function SortableAreaItem({ area, isActive }: { area: any, isActive: boolean }) 
 
 export function AppSidebar({ areas: initialAreas }: AppSidebarProps) {
   const pathname = usePathname();
+  const dndId = useId();
   const [areas, setAreas] = useState(initialAreas);
 
   useEffect(() => {
@@ -185,6 +186,7 @@ export function AppSidebar({ areas: initialAreas }: AppSidebarProps) {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <DndContext
+              id={dndId}
               sensors={sensors}
               collisionDetection={closestCorners}
               onDragEnd={handleDragEnd}

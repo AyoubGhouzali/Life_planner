@@ -4,11 +4,15 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, CheckSquare, Clock } from "lucide-react";
+import { Calendar, CheckSquare, Clock, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ProjectDetail } from "./project-detail";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { startTimer } from "@/actions/time-actions";
+import { useTimerStore } from "@/lib/stores/timer-store";
+import { toast } from "sonner";
 
 interface ProjectCardProps {
   project: any;
@@ -24,6 +28,19 @@ const priorityColors = {
 
 export function ProjectCard({ project, isOverlay }: ProjectCardProps) {
   const [showDetail, setShowDetail] = useState(false);
+  const setTimer = useTimerStore(state => state.setTimer);
+  
+  const handleStartTimer = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+        const timer = await startTimer(project.id);
+        setTimer(timer.id, new Date(timer.start_time), project.title);
+        toast.success("Timer started");
+    } catch (error) {
+        toast.error("Failed to start timer");
+    }
+  };
+
   const {
     attributes,
     listeners,
@@ -78,12 +95,22 @@ export function ProjectCard({ project, isOverlay }: ProjectCardProps) {
         <CardContent className="p-3 space-y-3">
           {/* Priority & Tags */}
           <div className="flex items-center justify-between">
-            <Badge 
-              variant="outline" 
-              className={cn("text-[10px] uppercase font-bold py-0 h-5", priorityColors[project.priority as keyof typeof priorityColors])}
-            >
-              {project.priority}
-            </Badge>
+            <div className="flex items-center gap-2">
+                <Badge 
+                variant="outline" 
+                className={cn("text-[10px] uppercase font-bold py-0 h-5", priorityColors[project.priority as keyof typeof priorityColors])}
+                >
+                {project.priority}
+                </Badge>
+                <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    className="h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 hover:bg-primary hover:text-primary-foreground"
+                    onClick={handleStartTimer}
+                >
+                    <Play className="h-3 w-3 fill-current" />
+                </Button>
+            </div>
             {project.due_date && (
               <div className={cn(
                 "flex items-center text-[10px] font-medium",

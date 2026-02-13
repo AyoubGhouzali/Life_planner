@@ -1,5 +1,20 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { 
+  getDashboardStats, 
+  getTodaysTasks, 
+  getUpcomingTasks, 
+  getRecentActivity 
+} from "@/lib/db/queries/dashboard";
+import { getAreas } from "@/lib/db/queries/areas";
+import { getTodaysHabits } from "@/lib/db/queries/habits";
+import { SummaryStats } from "@/components/dashboard/summary-stats";
+import { TodayTasks } from "@/components/dashboard/today-tasks";
+import { UpcomingDeadlines } from "@/components/dashboard/upcoming-deadlines";
+import { RecentActivity } from "@/components/dashboard/recent-activity";
+import { QuickAddTask } from "@/components/dashboard/quick-add-task";
+import { DashboardFilters } from "@/components/dashboard/dashboard-filters";
+import { HabitChecklist } from "@/components/habits/habit-checklist";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -9,12 +24,52 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  const [
+    stats,
+    todaysTasks,
+    upcomingTasks,
+    recentActivity,
+    areas,
+    todaysHabits
+  ] = await Promise.all([
+    getDashboardStats(user.id),
+    getTodaysTasks(user.id),
+    getUpcomingTasks(user.id),
+    getRecentActivity(user.id),
+    getAreas(user.id),
+    getTodaysHabits(user.id)
+  ]);
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold">Welcome to your Dashboard</h1>
-      <p className="mt-4 text-muted-foreground">
-        You are logged in as {user.email}
-      </p>
+    <div className="flex flex-col gap-6 p-6 md:p-8 max-w-7xl mx-auto">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground">
+            Welcome back, here's your overview for today.
+          </p>
+        </div>
+        <DashboardFilters areas={areas} />
+      </div>
+
+      <SummaryStats stats={stats} />
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+        <div className="col-span-1 lg:col-span-4 flex flex-col gap-6">
+            {/* Sticky Quick Add */}
+            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 -my-4 border-b">
+                 <QuickAddTask areas={areas} />
+            </div>
+            
+            <TodayTasks tasks={todaysTasks} />
+        </div>
+        
+        <div className="col-span-1 lg:col-span-3 flex flex-col gap-6">
+          <HabitChecklist habits={todaysHabits} />
+          <UpcomingDeadlines tasks={upcomingTasks} />
+          <RecentActivity items={recentActivity} />
+        </div>
+      </div>
     </div>
   );
 }

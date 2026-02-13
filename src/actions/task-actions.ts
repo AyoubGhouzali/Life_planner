@@ -57,6 +57,7 @@ export async function createTask(formData: FormData) {
   if (project?.column?.board) {
     revalidatePath(`/areas/${project.column.board.area_id}`);
   }
+  revalidatePath("/dashboard");
 
   return newTask;
 }
@@ -114,6 +115,7 @@ export async function updateTask(id: string, formData: FormData) {
   if (project?.column?.board) {
     revalidatePath(`/areas/${project.column.board.area_id}`);
   }
+  revalidatePath("/dashboard");
 
   return updatedTask;
 }
@@ -156,6 +158,7 @@ export async function toggleTask(id: string) {
   if (project?.column?.board) {
     revalidatePath(`/areas/${project.column.board.area_id}`);
   }
+  revalidatePath("/dashboard");
 
   return updatedTask;
 }
@@ -185,6 +188,7 @@ export async function deleteTask(id: string) {
     if (project?.column?.board) {
       revalidatePath(`/areas/${project.column.board.area_id}`);
     }
+    revalidatePath("/dashboard");
   }
 }
 

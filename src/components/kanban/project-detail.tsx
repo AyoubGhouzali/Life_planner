@@ -21,10 +21,12 @@ import {
 } from "@/components/ui/select";
 import { updateProject, deleteProject } from "@/actions/project-actions";
 import { toast } from "sonner";
-import { Calendar as CalendarIcon, Clock, Trash2, Tag, CheckSquare } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Plus, Trash2, Tag, CheckSquare } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { TaskList } from "@/components/tasks/task-list";
+import { NoteList } from "@/components/notes/note-list";
+import { Separator } from "@/components/ui/separator";
 
 interface ProjectDetailProps {
   project: any;
@@ -154,6 +156,11 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
             </div>
             <TaskList projectId={project.id} initialTasks={project.tasks || []} />
           </div>
+
+          <Separator />
+
+          {/* Notes Section */}
+          <NoteList projectId={project.id} notes={project.notes || []} />
 
           {/* Tags Section */}
           <div className="space-y-2">

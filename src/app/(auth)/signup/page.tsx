@@ -29,9 +29,6 @@ export default function SignupPage() {
     if (result?.error) {
       toast.error(result.error);
       setIsLoading(false);
-    } else if (result?.success) {
-      toast.success(result.success);
-      setIsLoading(false);
     }
   }
 
