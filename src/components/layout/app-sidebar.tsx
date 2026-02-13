@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Target,
   BarChart3,
+  Calendar,
   Settings,
   Plus,
   LogOut,
@@ -55,6 +56,7 @@ const navItems = [
   { title: "Habits", icon: CheckCircle2, href: "/habits" },
   { title: "Goals", icon: Target, href: "/goals" },
   { title: "Analytics", icon: BarChart3, href: "/analytics" },
+  { title: "Weekly Review", icon: Calendar, href: "/weekly-review" },
   { title: "Settings", icon: Settings, href: "/settings" },
 ];
 
