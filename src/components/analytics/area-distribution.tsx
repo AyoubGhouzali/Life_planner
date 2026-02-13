@@ -9,12 +9,30 @@ import {
   Tooltip,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PieChartIcon } from "lucide-react";
 
 interface AreaDistributionProps {
   data: { areaName: string; areaColor: string | null; taskCount: number }[];
 }
 
 export function AreaDistribution({ data }: AreaDistributionProps) {
+  if (data.length === 0) {
+    return (
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>Task Distribution by Area</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
+            <PieChartIcon className="h-10 w-10 mb-2 opacity-50" />
+            <p className="text-sm">No task distribution data yet.</p>
+            <p className="text-xs mt-1">Complete tasks across areas to see distribution.</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="col-span-1">
       <CardHeader>

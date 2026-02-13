@@ -10,12 +10,32 @@ import {
   Tooltip,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Target } from "lucide-react";
 
 interface LifeBalanceRadarProps {
   data: { name: string; score: number }[];
 }
 
 export function LifeBalanceRadar({ data }: LifeBalanceRadarProps) {
+  const hasActivity = data.some((d) => d.score > 0);
+
+  if (data.length === 0 || !hasActivity) {
+    return (
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>Life Balance Radar</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
+            <Target className="h-10 w-10 mb-2 opacity-50" />
+            <p className="text-sm">No activity data for this period.</p>
+            <p className="text-xs mt-1">Complete tasks, log habits, or track time to see your balance.</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="col-span-1">
       <CardHeader>

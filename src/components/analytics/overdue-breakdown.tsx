@@ -10,53 +10,59 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
-interface TimeDistributionProps {
-  data: { areaName: string; totalDuration: number | null }[];
+interface OverdueBreakdownProps {
+  data: { areaName: string; overdueCount: number }[];
 }
 
-export function TimeDistribution({ data }: TimeDistributionProps) {
-  const formattedData = data.map(item => ({
-    ...item,
-    hours: item.totalDuration ? (item.totalDuration / 3600).toFixed(1) : 0
-  }));
-
-  const hasTime = formattedData.some((d) => Number(d.hours) > 0);
-
-  if (data.length === 0 || !hasTime) {
+export function OverdueBreakdown({ data }: OverdueBreakdownProps) {
+  if (data.length === 0) {
     return (
       <Card className="col-span-1">
         <CardHeader>
-          <CardTitle>Time Distribution (Hours)</CardTitle>
+          <CardTitle>Overdue Tasks by Area</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
-            <Clock className="h-10 w-10 mb-2 opacity-50" />
-            <p className="text-sm">No time tracked in this period.</p>
-            <p className="text-xs mt-1">Use the timer to track time spent on projects.</p>
+            <AlertTriangle className="h-10 w-10 mb-2 opacity-50" />
+            <p className="text-sm">No overdue tasks!</p>
+            <p className="text-xs mt-1">You&apos;re on top of your deadlines.</p>
           </div>
         </CardContent>
       </Card>
     );
   }
 
+  const totalOverdue = data.reduce((sum, item) => sum + item.overdueCount, 0);
+
   return (
     <Card className="col-span-1">
       <CardHeader>
-        <CardTitle>Time Distribution (Hours)</CardTitle>
+        <CardTitle className="flex items-center justify-between">
+          <span>Overdue Tasks by Area</span>
+          <span className="text-sm font-normal text-red-500">
+            {totalOverdue} total overdue
+          </span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={formattedData} layout="vertical">
+            <BarChart data={data} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-              <XAxis type="number" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis 
-                dataKey="areaName" 
-                type="category" 
-                fontSize={12} 
-                tickLine={false} 
+              <XAxis
+                type="number"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                allowDecimals={false}
+              />
+              <YAxis
+                dataKey="areaName"
+                type="category"
+                fontSize={12}
+                tickLine={false}
                 axisLine={false}
                 width={100}
               />
@@ -69,8 +75,8 @@ export function TimeDistribution({ data }: TimeDistributionProps) {
                           <span className="text-[0.70rem] uppercase text-muted-foreground">
                             {payload[0].payload.areaName}
                           </span>
-                          <span className="font-bold">
-                            {payload[0].value} hours
+                          <span className="font-bold text-red-500">
+                            {payload[0].value} overdue tasks
                           </span>
                         </div>
                       </div>
@@ -80,8 +86,8 @@ export function TimeDistribution({ data }: TimeDistributionProps) {
                 }}
               />
               <Bar
-                dataKey="hours"
-                fill="hsl(var(--primary))"
+                dataKey="overdueCount"
+                fill="hsl(var(--destructive, 0 84% 60%))"
                 radius={[0, 4, 4, 0]}
               />
             </BarChart>

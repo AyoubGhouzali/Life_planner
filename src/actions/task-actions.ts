@@ -144,6 +144,41 @@ export async function toggleTask(id: string) {
     .where(eq(tasks.id, id))
     .returning();
 
+  // Handle recurrence
+  if (newStatus === "done" && task.is_recurring && task.recurrence_rule) {
+    let nextDueDate = task.due_date ? new Date(task.due_date) : new Date();
+    
+    // Safety check: if invalid date
+    if (isNaN(nextDueDate.getTime())) nextDueDate = new Date();
+
+    switch (task.recurrence_rule) {
+      case "daily":
+        nextDueDate.setDate(nextDueDate.getDate() + 1);
+        break;
+      case "weekly":
+        nextDueDate.setDate(nextDueDate.getDate() + 7);
+        break;
+      case "biweekly":
+        nextDueDate.setDate(nextDueDate.getDate() + 14);
+        break;
+      case "monthly":
+        nextDueDate.setMonth(nextDueDate.getMonth() + 1);
+        break;
+    }
+    
+    await db.insert(tasks).values({
+      project_id: task.project_id,
+      parent_task_id: task.parent_task_id,
+      title: task.title,
+      status: "todo",
+      priority: task.priority,
+      due_date: nextDueDate,
+      is_recurring: true,
+      recurrence_rule: task.recurrence_rule,
+      position: task.position, 
+    });
+  }
+
   const project = await db.query.projects.findFirst({
     where: eq(projects.id, updatedTask.project_id),
     with: {

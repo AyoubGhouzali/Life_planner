@@ -12,6 +12,7 @@ import {
   Bar,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart3 } from "lucide-react";
 
 interface CompletionChartProps {
   data: { date: string; count: number }[];
@@ -19,6 +20,23 @@ interface CompletionChartProps {
 }
 
 export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
+  if (data.length === 0) {
+    return (
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>Completion Over Time</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
+            <BarChart3 className="h-10 w-10 mb-2 opacity-50" />
+            <p className="text-sm">No completed tasks in this period.</p>
+            <p className="text-xs mt-1">Complete some tasks to see your progress.</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="col-span-1">
       <CardHeader>

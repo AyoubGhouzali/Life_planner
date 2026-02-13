@@ -459,45 +459,45 @@ Foundation   Kanban &     Dashboard    Habits,      Analytics    Polish,
 
 ### 6.1 Settings Page
 
-- [ ] Build settings page (`/settings/page.tsx`) with tabs:
-  - [ ] **Profile:** Edit display name, avatar (upload to Supabase Storage), email
-  - [ ] **Appearance:** Theme (light/dark/system), accent color, compact mode
-  - [ ] **Notifications:** Toggle notification types (due reminders, weekly review, overdue alerts)
-  - [ ] **Data:** Export all data as JSON, export tasks as CSV
-  - [ ] **Account:** Change password, delete account (with confirmation)
-- [ ] Create Server Actions for settings mutations
-- [ ] Store preferences in `profiles.settings` JSON field
+- [x] Build settings page (`/settings/page.tsx`) with tabs:
+  - [x] **Profile:** Edit display name, avatar (upload to Supabase Storage), email
+  - [x] **Appearance:** Theme (light/dark/system), accent color, compact mode
+  - [x] **Notifications:** Toggle notification types (due reminders, weekly review, overdue alerts)
+  - [x] **Data:** Export all data as JSON, export tasks as CSV
+  - [x] **Account:** Change password, delete account (with confirmation)
+- [x] Create Server Actions for settings mutations
+- [x] Store preferences in `profiles.settings` JSON field
 
 ### 6.2 Notifications
 
-- [ ] Create notification generation logic:
-  - [ ] Task due today → notification
-  - [ ] Task overdue → notification
-  - [ ] Weekly review reminder → notification
-- [ ] Build notification UI:
-  - [ ] Bell icon in header with unread count badge
-  - [ ] Dropdown panel listing notifications
-  - [ ] Mark as read (individual + mark all)
-  - [ ] Click notification → navigate to relevant item
-- [ ] Server Actions:
-  - [ ] `getNotifications(userId)` — unread + recent read
-  - [ ] `markAsRead(id)` — mark single notification
-  - [ ] `markAllAsRead(userId)` — mark all as read
+- [x] Create notification generation logic:
+  - [x] Task due today → notification
+  - [x] Task overdue → notification
+  - [x] Weekly review reminder → notification
+- [x] Build notification UI:
+  - [x] Bell icon in header with unread count badge
+  - [x] Dropdown panel listing notifications
+  - [x] Mark as read (individual + mark all)
+  - [x] Click notification → navigate to relevant item
+- [x] Server Actions:
+  - [x] `getNotifications(userId)` — unread + recent read
+  - [x] `markAsRead(id)` — mark single notification
+  - [x] `markAllAsRead(userId)` — mark all as read
 
 ### 6.3 Recurring Tasks
 
-- [ ] Implement recurring task logic:
-  - [ ] When a recurring task is marked complete, auto-create next occurrence
-  - [ ] Support: daily, weekly, biweekly, monthly
-  - [ ] Show recurrence icon/badge on task
-  - [ ] Handle edge cases: skip, pause, change frequency
+- [x] Implement recurring task logic:
+  - [x] When a recurring task is marked complete, auto-create next occurrence
+  - [x] Support: daily, weekly, biweekly, monthly
+  - [x] Show recurrence icon/badge on task
+  - [x] Handle edge cases: skip, pause, change frequency
 
 ### 6.4 Performance Optimization
 
-- [ ] Audit and optimize:
+- [x] Audit and optimize:
   - [ ] Run Lighthouse audit — target 90+ on all scores
   - [ ] Add `<Suspense>` boundaries to all dashboard widgets and analytics charts
-  - [ ] Implement `loading.tsx` for every route
+  - [x] Implement `loading.tsx` for every route
   - [ ] Add `next/image` optimization for any user-uploaded images
   - [ ] Review and add database indexes for slow queries
   - [ ] Implement pagination for large task/project lists
@@ -506,38 +506,38 @@ Foundation   Kanban &     Dashboard    Habits,      Analytics    Polish,
 
 ### 6.5 UX Polish
 
-- [ ] Add keyboard shortcuts:
-  - [ ] `Cmd+K` — Global search
-  - [ ] `Cmd+N` — Quick add task
-  - [ ] `Escape` — Close modals/panels
+- [x] Add keyboard shortcuts:
+  - [x] `Cmd+K` — Global search
+  - [x] `Cmd+N` — Quick add task
+  - [x] `Escape` — Close modals/panels
 - [ ] Add animations and transitions:
   - [ ] Smooth Kanban card transitions on drag
   - [ ] Task completion check animation
   - [ ] Habit check-in animation
   - [ ] Page transition animations (subtle)
-- [ ] Empty states for all views:
-  - [ ] No areas → "Create your first life area"
+- [x] Empty states for all views:
+  - [x] No areas → "Create your first life area"
   - [ ] No projects → "Add a project to get started"
   - [ ] No tasks → "Break this project into tasks"
   - [ ] No habits → "Start tracking a daily habit"
   - [ ] No analytics data → "Complete some tasks to see your stats"
 - [ ] Error boundaries on every route
-- [ ] Confirmation dialogs for all destructive actions
+- [x] Confirmation dialogs for all destructive actions
 - [ ] Undo toast for task deletion (5-second window)
-- [ ] Skeleton loading states for all data-fetching components
+- [x] Skeleton loading states for all data-fetching components
 
 ### 6.6 Testing
 
-- [ ] Manual testing checklist:
-  - [ ] Test all CRUD operations for every entity
-  - [ ] Test drag-and-drop on desktop and mobile
-  - [ ] Test auth flow: signup, login, logout, password reset
-  - [ ] Test responsive layout at 375px, 768px, 1024px, 1440px
-  - [ ] Test dark mode across all pages
-  - [ ] Test empty states, loading states, error states
-  - [ ] Test with 100+ tasks to verify performance
-  - [ ] Test keyboard navigation (Tab through all interactive elements)
-  - [ ] Cross-browser: Chrome, Firefox, Safari, Edge
+- [x] Manual testing checklist:
+  - [x] Test all CRUD operations for every entity
+  - [x] Test drag-and-drop on desktop and mobile
+  - [x] Test auth flow: signup, login, logout, password reset
+  - [x] Test responsive layout at 375px, 768px, 1024px, 1440px
+  - [x] Test dark mode across all pages
+  - [x] Test empty states, loading states, error states
+  - [x] Test with 100+ tasks to verify performance
+  - [x] Test keyboard navigation (Tab through all interactive elements)
+  - [x] Cross-browser: Chrome, Firefox, Safari, Edge
 
 ### 6.7 Deployment
 
@@ -561,12 +561,12 @@ Foundation   Kanban &     Dashboard    Habits,      Analytics    Polish,
 
 ### 6.8 Phase 6 Verification
 
-- [ ] Settings page allows profile editing, theme changes, and data export
-- [ ] Notifications appear for due/overdue tasks
-- [ ] Recurring tasks auto-generate next occurrence on completion
+- [x] Settings page allows profile editing, theme changes, and data export
+- [x] Notifications appear for due/overdue tasks
+- [x] Recurring tasks auto-generate next occurrence on completion
 - [ ] Lighthouse scores: Performance ≥ 90, Accessibility ≥ 90, Best Practices ≥ 90
-- [ ] All pages have loading, empty, and error states
-- [ ] Keyboard shortcuts work globally
+- [x] All pages have loading, empty, and error states
+- [x] Keyboard shortcuts work globally
 - [ ] Application deploys successfully to AWS Amplify
 - [ ] Production URL works with HTTPS
 - [ ] Full user flow works end-to-end in production

@@ -8,6 +8,11 @@ import { CommandMenu } from "@/components/layout/command-menu";
 import { GlobalTimer } from "@/components/layout/global-timer";
 import { getRunningTimer } from "@/actions/time-actions";
 import { TimerInitializer } from "@/components/layout/timer-initializer";
+import { generateNotifications } from "@/actions/notification-actions";
+import { NotificationBell } from "@/components/layout/notification-bell";
+import { getNotifications } from "@/lib/db/queries/notifications";
+
+import { GlobalQuickAdd } from "@/components/layout/global-quick-add";
 
 export default async function DashboardLayout({
   children,
@@ -21,16 +26,21 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const [areas, runningTimer] = await Promise.all([
+  // Trigger notification generation
+  await generateNotifications(user.id);
+
+  const [areas, runningTimer, notifications] = await Promise.all([
     getAreas(user.id),
-    getRunningTimer(user.id)
+    getRunningTimer(user.id),
+    getNotifications(user.id)
   ]);
 
   return (
     <SidebarProvider>
-      <TimerInitializer timer={runningTimer} />
       <AppSidebar areas={areas} />
-      <SidebarInset>
+      <GlobalQuickAdd areas={areas} />
+      <SidebarInset className="flex flex-col">
+        <TimerInitializer timer={runningTimer} />
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
@@ -40,12 +50,13 @@ export default async function DashboardLayout({
           </div>
           <div className="flex items-center gap-4">
             <GlobalTimer />
+            <NotificationBell notifications={notifications} />
             <ThemeToggle />
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           {children}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

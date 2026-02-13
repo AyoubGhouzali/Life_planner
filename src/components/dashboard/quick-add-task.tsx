@@ -37,16 +37,21 @@ interface Area {
 
 interface QuickAddTaskProps {
   areas: Area[];
+  onSuccess?: () => void;
 }
 
-export function QuickAddTask({ areas }: QuickAddTaskProps) {
+export function QuickAddTask({ areas, onSuccess }: QuickAddTaskProps) {
   const [title, setTitle] = useState("");
   const [projectId, setProjectId] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Add this for internal state if needed, but not used here
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !projectId) return;
+    if (!title || !projectId) {
+        toast.error("Title and Project are required");
+        return;
+    }
 
     setLoading(true);
     try {
@@ -59,7 +64,11 @@ export function QuickAddTask({ areas }: QuickAddTaskProps) {
       await createTask(formData);
       toast.success("Task created");
       setTitle("");
-      // Keep project selected for subsequent adds
+      // Keep project selected for subsequent adds? Yes.
+      
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       toast.error("Failed to create task");
     } finally {

@@ -30,7 +30,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "@/actions/auth-actions";
 import { reorderAreas } from "@/actions/area-actions";
 import { cn } from "@/lib/utils";
-import { useState, useEffect, useId } from "react";
+import { useState, useEffect } from "react";
 import {
   DndContext,
   closestCorners,
@@ -112,10 +112,33 @@ function SortableAreaItem({ area, isActive }: { area: any, isActive: boolean }) 
   );
 }
 
+function StaticAreaItem({ area, isActive }: { area: any; isActive: boolean }) {
+  const Icon = (Icons as any)[area.icon || "Circle"] || Icons.Circle;
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        asChild
+        isActive={isActive}
+        tooltip={area.name}
+      >
+        <Link href={`/areas/${area.id}`}>
+          <Icon className="h-4 w-4 shrink-0" style={{ color: area.color }} />
+          <span className="truncate">{area.name}</span>
+        </Link>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+}
+
 export function AppSidebar({ areas: initialAreas }: AppSidebarProps) {
   const pathname = usePathname();
-  const dndId = useId();
   const [areas, setAreas] = useState(initialAreas);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setAreas(initialAreas);
@@ -148,13 +171,13 @@ export function AppSidebar({ areas: initialAreas }: AppSidebarProps) {
   }
 
   return (
-    <Sidebar variant="inset">
+    <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader className="flex items-center justify-between p-4">
         <div className="flex items-center gap-2 font-bold text-xl">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
+          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shrink-0">
             L
           </div>
-          <span>LifePlanner</span>
+          <span className="truncate group-data-[collapsible=icon]:hidden">LifePlanner</span>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -187,33 +210,50 @@ export function AppSidebar({ areas: initialAreas }: AppSidebarProps) {
             </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <DndContext
-              id={dndId}
-              sensors={sensors}
-              collisionDetection={closestCorners}
-              onDragEnd={handleDragEnd}
-            >
+            {mounted ? (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCorners}
+                onDragEnd={handleDragEnd}
+              >
+                <SidebarMenu>
+                  {areas.length > 0 ? (
+                    <SortableContext
+                      items={areas.map((a) => a.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      {areas.map((area) => (
+                        <SortableAreaItem
+                          key={area.id}
+                          area={area}
+                          isActive={pathname === `/areas/${area.id}`}
+                        />
+                      ))}
+                    </SortableContext>
+                  ) : (
+                    <div className="px-4 py-2 text-xs text-muted-foreground italic">
+                      No areas yet
+                    </div>
+                  )}
+                </SidebarMenu>
+              </DndContext>
+            ) : (
               <SidebarMenu>
                 {areas.length > 0 ? (
-                  <SortableContext
-                    items={areas.map((a) => a.id)}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {areas.map((area) => (
-                      <SortableAreaItem
-                        key={area.id}
-                        area={area}
-                        isActive={pathname === `/areas/${area.id}`}
-                      />
-                    ))}
-                  </SortableContext>
+                  areas.map((area) => (
+                    <StaticAreaItem
+                      key={area.id}
+                      area={area}
+                      isActive={pathname === `/areas/${area.id}`}
+                    />
+                  ))
                 ) : (
                   <div className="px-4 py-2 text-xs text-muted-foreground italic">
                     No areas yet
                   </div>
                 )}
               </SidebarMenu>
-            </DndContext>
+            )}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
