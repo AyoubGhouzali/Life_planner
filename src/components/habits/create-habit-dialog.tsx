@@ -7,6 +7,7 @@ import * as z from "zod";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -84,6 +85,9 @@ export function CreateHabitDialog({ areas }: CreateHabitDialogProps) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Habit</DialogTitle>
+          <DialogDescription>
+            Add a new habit to track your daily or weekly progress.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

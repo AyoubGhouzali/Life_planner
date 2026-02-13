@@ -86,11 +86,15 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
             </Button>
           </div>
           <div className="space-y-1">
+            <SheetTitle>Project Details</SheetTitle>
+            <SheetDescription className="sr-only">
+                View and edit project details, tasks, and notes.
+            </SheetDescription>
             <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              onBlur={() => handleUpdate({ title })}
-              className="text-2xl font-bold border-none px-0 focus-visible:ring-0 h-auto"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={() => handleUpdate({ title })}
+                className="text-2xl font-bold border-none px-0 focus-visible:ring-0 h-auto"
             />
           </div>
         </SheetHeader>

@@ -11,12 +11,19 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface LifeBalanceRadarProps {
   data: { name: string; score: number }[];
 }
 
 export function LifeBalanceRadar({ data }: LifeBalanceRadarProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const hasActivity = data.some((d) => d.score > 0);
 
   if (data.length === 0 || !hasActivity) {
@@ -43,39 +50,43 @@ export function LifeBalanceRadar({ data }: LifeBalanceRadarProps) {
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
-              <PolarGrid />
-              <PolarAngleAxis dataKey="name" fontSize={12} />
-              <PolarRadiusAxis angle={30} domain={[0, 'auto']} fontSize={10} />
-              <Radar
-                name="Score"
-                dataKey="score"
-                stroke="hsl(var(--primary))"
-                fill="hsl(var(--primary))"
-                fillOpacity={0.6}
-              />
-              <Tooltip
-                content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    return (
-                      <div className="rounded-lg border bg-background p-2 shadow-sm">
-                        <div className="flex flex-col">
-                          <span className="text-[0.70rem] uppercase text-muted-foreground">
-                            {payload[0].payload.name}
-                          </span>
-                          <span className="font-bold">
-                            Score: {payload[0].value}
-                          </span>
+          {mounted ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
+                <PolarGrid />
+                <PolarAngleAxis dataKey="name" fontSize={12} />
+                <PolarRadiusAxis angle={30} domain={[0, 'auto']} fontSize={10} />
+                <Radar
+                  name="Score"
+                  dataKey="score"
+                  stroke="hsl(var(--primary))"
+                  fill="hsl(var(--primary))"
+                  fillOpacity={0.6}
+                />
+                <Tooltip
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <div className="rounded-lg border bg-background p-2 shadow-sm">
+                          <div className="flex flex-col">
+                            <span className="text-[0.70rem] uppercase text-muted-foreground">
+                              {payload[0].payload.name}
+                            </span>
+                            <span className="font-bold">
+                              Score: {payload[0].value}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  }
-                  return null;
-                }}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
+                      );
+                    }
+                    return null;
+                  }}
+                />
+              </RadarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full w-full bg-muted/20 animate-pulse rounded-md" />
+          )}
         </div>
       </CardContent>
     </Card>

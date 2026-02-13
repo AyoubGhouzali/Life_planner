@@ -16,8 +16,13 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
   const [unread, setUnread] = useState(notifications.unread);
   const [recentRead, setRecentRead] = useState(notifications.recentRead);
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Sync with prop if it changes (e.g. server revalidation)
   useEffect(() => {
     setUnread(notifications.unread);
@@ -97,7 +102,9 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
                         <div className="space-y-1">
                             <p className="text-sm font-medium leading-none">{notification.title}</p>
                             <p className="text-xs text-muted-foreground">{notification.message}</p>
-                            <p className="text-[10px] text-muted-foreground mt-1">{new Date(notification.created_at).toLocaleDateString()}</p>
+                            {mounted && (
+                                <p className="text-[10px] text-muted-foreground mt-1">{new Date(notification.created_at).toLocaleDateString()}</p>
+                            )}
                         </div>
                     </div>
                   </div>
