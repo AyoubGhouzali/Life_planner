@@ -7,7 +7,7 @@ import { CheckCircle2, CheckSquare, Flame, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logHabit, unlogHabit } from "@/actions/habit-actions";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface HabitCardProps {
   habit: {
@@ -30,6 +30,11 @@ export function HabitCard({ habit }: HabitCardProps) {
   const [isCompleted, setIsCompleted] = useState(habit.isCompletedToday);
   const [streak, setStreak] = useState(habit.currentStreak);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setIsCompleted(habit.isCompletedToday);
+    setStreak(habit.currentStreak);
+  }, [habit.isCompletedToday, habit.currentStreak]);
 
   const handleToggle = async () => {
     setLoading(true);

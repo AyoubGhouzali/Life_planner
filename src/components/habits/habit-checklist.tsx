@@ -6,7 +6,7 @@ import { CheckCircle2, Circle, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logHabit, unlogHabit } from "@/actions/habit-actions";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Habit {
   id: string;
@@ -21,6 +21,10 @@ interface HabitChecklistProps {
 
 export function HabitChecklist({ habits }: HabitChecklistProps) {
   const [localHabits, setLocalHabits] = useState(habits);
+
+  useEffect(() => {
+    setLocalHabits(habits);
+  }, [habits]);
 
   const handleToggle = async (habitId: string, isCompleted: boolean) => {
     // Optimistic update

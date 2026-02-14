@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -32,6 +32,16 @@ interface BoardProps {
 
 export function KanbanBoard({ initialData }: BoardProps) {
   const [board, setBoard] = useState(initialData);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setBoard(initialData);
+  }, [initialData]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [activeId, setActiveId] = useState<string | null>(null);
   const [activeProject, setActiveProject] = useState<any>(null);
 
@@ -213,6 +223,17 @@ export function KanbanBoard({ initialData }: BoardProps) {
         // We might want to revert the state here if we want strict consistency
       }
     }
+  }
+
+  if (!mounted) {
+    return (
+      <div className="flex gap-4 h-full overflow-x-auto pb-4">
+        {board.columns.map((column: any) => (
+          <KanbanColumn key={column.id} column={column} />
+        ))}
+        <AddColumn boardId={board.id} />
+      </div>
+    );
   }
 
   return (

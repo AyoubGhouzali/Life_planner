@@ -12,27 +12,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-function FormattedDate({ date }: { date: string }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
-  return (
-    <p className="text-[10px] text-muted-foreground mt-1">
-      {new Date(date).toLocaleDateString()}
-    </p>
-  );
-}
-
 export function NotificationBell({ notifications }: { notifications: { unread: any[], recentRead: any[] } }) {
   const [unread, setUnread] = useState(notifications.unread);
   const [recentRead, setRecentRead] = useState(notifications.recentRead);
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     setUnread(notifications.unread);
@@ -75,16 +64,22 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
     }
   };
 
+  const bellButton = (
+    <Button variant="ghost" size="icon" className="relative">
+      <Bell className="h-5 w-5" />
+      {unread.length > 0 && (
+        <span className="absolute top-1.5 right-2 h-2 w-2 rounded-full bg-red-600" />
+      )}
+      <span className="sr-only">Notifications</span>
+    </Button>
+  );
+
+  if (!mounted) return bellButton;
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          {unread.length > 0 && (
-            <span className="absolute top-1.5 right-2 h-2 w-2 rounded-full bg-red-600" />
-          )}
-          <span className="sr-only">Notifications</span>
-        </Button>
+        {bellButton}
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
         <div className="flex items-center justify-between border-b p-4">
@@ -109,7 +104,7 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
                         <div className="space-y-1">
                             <p className="text-sm font-medium leading-none">{notification.title}</p>
                             <p className="text-xs text-muted-foreground">{notification.message}</p>
-                            <FormattedDate date={notification.created_at} />
+                            <p className="text-[10px] text-muted-foreground mt-1">{new Date(notification.created_at).toLocaleDateString()}</p>
                         </div>
                     </div>
                   </div>
