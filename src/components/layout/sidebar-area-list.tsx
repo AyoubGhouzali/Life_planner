@@ -22,7 +22,12 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { toast } from "sonner";
 import { reorderAreas } from "@/actions/area-actions";
-import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
+import {
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarMenuAction,
+} from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import * as Icons from "lucide-react";
 import { GripVertical, Circle } from "lucide-react";
@@ -38,7 +43,13 @@ interface SidebarAreaListProps {
   areas: Area[];
 }
 
-function SortableAreaItem({ area, isActive }: { area: Area; isActive: boolean }) {
+function SortableAreaItem({
+  area,
+  isActive,
+}: {
+  area: Area;
+  isActive: boolean;
+}) {
   const {
     attributes,
     listeners,
@@ -54,41 +65,36 @@ function SortableAreaItem({ area, isActive }: { area: Area; isActive: boolean })
     zIndex: isDragging ? 10 : 0,
   };
 
-  // Safe icon lookup
   const IconComponent = (Icons as any)[area.icon || "Circle"] || Circle;
 
   return (
-    <SidebarMenuItem 
-      ref={setNodeRef} 
+    <SidebarMenuItem
+      ref={setNodeRef}
       style={style}
-      className={cn("group/item relative", isDragging && "opacity-50")}
+      className={cn(isDragging && "opacity-50")}
     >
-      <div className="flex items-center w-full">
-        {/* Drag Handle - visible on hover */}
-        <button
-          {...attributes}
-          {...listeners}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-1.5 opacity-0 group-hover/item:opacity-100 transition-opacity cursor-grab active:cursor-grabbing hover:bg-muted rounded-md"
-          aria-label="Reorder area"
-        >
-          <GripVertical className="h-3 w-3 text-muted-foreground" />
-        </button>
-
-        <SidebarMenuButton
-          asChild
-          isActive={isActive}
-          tooltip={area.name}
-          className="pl-8 transition-all" // Add padding for the handle space
-        >
-          <Link href={`/areas/${area.id}`}>
-            <IconComponent 
-              className="h-4 w-4 shrink-0 transition-colors" 
-              style={{ color: area.color || undefined }} 
-            />
-            <span className="truncate">{area.name}</span>
-          </Link>
-        </SidebarMenuButton>
-      </div>
+      <SidebarMenuButton
+        asChild
+        isActive={isActive}
+        tooltip={area.name}
+      >
+        <Link href={`/areas/${area.id}`}>
+          <IconComponent
+            className="h-4 w-4 shrink-0"
+            style={{ color: area.color || undefined }}
+          />
+          <span className="truncate">{area.name}</span>
+        </Link>
+      </SidebarMenuButton>
+      <SidebarMenuAction
+        {...attributes}
+        {...listeners}
+        showOnHover
+        className="cursor-grab active:cursor-grabbing"
+        aria-label="Reorder area"
+      >
+        <GripVertical className="h-3.5 w-3.5" />
+      </SidebarMenuAction>
     </SidebarMenuItem>
   );
 }
@@ -136,37 +142,30 @@ export function SidebarAreaList({ areas: initialAreas }: SidebarAreaListProps) {
     }
   }
 
-  // To avoid hydration mismatch and "Rendered more hooks" errors:
-  // 1. We always call hooks (useSensors) at the top level.
-  // 2. We only render the DndContext on the client.
-  // 3. We use a stable ID for DndContext if needed (dnd-kit does this internally with useId).
-  
   if (!mounted) {
     return (
       <SidebarMenu>
         {areas.map((area) => {
-           const IconComponent = (Icons as any)[area.icon || "Circle"] || Circle;
-           const isActive = pathname === `/areas/${area.id}`;
-           return (
-            <SidebarMenuItem key={area.id} className="group/item relative">
-              <div className="flex items-center w-full">
-                <SidebarMenuButton
-                  asChild
-                  isActive={isActive}
-                  tooltip={area.name}
-                  className="pl-8 transition-all"
-                >
-                  <Link href={`/areas/${area.id}`}>
-                    <IconComponent 
-                      className="h-4 w-4 shrink-0 transition-colors" 
-                      style={{ color: area.color || undefined }} 
-                    />
-                    <span className="truncate">{area.name}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </div>
+          const IconComponent =
+            (Icons as any)[area.icon || "Circle"] || Circle;
+          const isActive = pathname === `/areas/${area.id}`;
+          return (
+            <SidebarMenuItem key={area.id}>
+              <SidebarMenuButton
+                asChild
+                isActive={isActive}
+                tooltip={area.name}
+              >
+                <Link href={`/areas/${area.id}`}>
+                  <IconComponent
+                    className="h-4 w-4 shrink-0"
+                    style={{ color: area.color || undefined }}
+                  />
+                  <span className="truncate">{area.name}</span>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
-           )
+          );
         })}
       </SidebarMenu>
     );

@@ -224,42 +224,28 @@ const Sidebar = React.forwardRef<
     }
 
     return (
-      <div
+      <aside
         ref={ref}
-        className={cn(
-          "group peer hidden shrink-0 text-sidebar-foreground md:block",
-          "transition-all duration-200 ease-linear",
-          state === "collapsed" ? "w-[--sidebar-width-icon]" : "w-[--sidebar-width]",
-          collapsible === "offcanvas" && state === "collapsed" && "w-0",
-          variant === "inset" && "bg-transparent"
-        )}
+        data-sidebar="sidebar"
         data-state={state}
         data-collapsible={state === "collapsed" ? collapsible : ""}
         data-variant={variant}
         data-side={side}
+        className={cn(
+          "group peer hidden shrink-0 md:flex flex-col",
+          "sticky top-0 h-svh",
+          "bg-sidebar text-sidebar-foreground",
+          "transition-[width] duration-200 ease-linear",
+          state === "expanded" && "w-[16rem]",
+          state === "collapsed" && collapsible === "icon" && "w-[3rem]",
+          state === "collapsed" && collapsible === "offcanvas" && "w-0",
+          side === "left" ? "border-r" : "border-l",
+          className
+        )}
+        {...props}
       >
-        <div
-          className={cn(
-            "fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-all duration-200 ease-linear md:flex",
-            state === "collapsed" && "w-[--sidebar-width-icon]",
-            side === "left"
-              ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
-              : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
-            variant === "inset"
-              ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+theme(spacing.4)+2px)]"
-              : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
-            className
-          )}
-          {...props}
-        >
-          <div
-            data-sidebar="sidebar"
-            className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
-          >
-            {children}
-          </div>
-        </div>
-      </div>
+        {children}
+      </aside>
     )
   }
 )
@@ -306,12 +292,9 @@ const SidebarRail = React.forwardRef<
       onClick={toggleSidebar}
       title="Toggle Sidebar"
       className={cn(
-        "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
-        "[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize",
-        "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
-        "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar",
-        "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",
-        "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
+        "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border sm:flex",
+        "group-data-[side=left]:-right-4 group-data-[side=right]:left-0",
+        "cursor-w-resize group-data-[state=collapsed]:cursor-e-resize",
         className
       )}
       {...props}
@@ -321,35 +304,19 @@ const SidebarRail = React.forwardRef<
 SidebarRail.displayName = "SidebarRail"
 
 const SidebarInset = React.forwardRef<
-
   HTMLDivElement,
-
   React.ComponentProps<"main">
-
 >(({ className, ...props }, ref) => {
-
   return (
-
     <main
-
       ref={ref}
-
       className={cn(
-
-        "relative flex min-h-svh min-w-0 flex-1 flex-col overflow-x-hidden bg-background transition-all duration-200 ease-linear",
-
-        "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
-
+        "relative flex min-h-svh min-w-0 flex-1 flex-col overflow-x-hidden bg-background",
         className
-
       )}
-
       {...props}
-
     />
-
   )
-
 })
 
 

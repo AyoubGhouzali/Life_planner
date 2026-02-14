@@ -11,6 +11,7 @@ import { TimerInitializer } from "@/components/layout/timer-initializer";
 import { generateNotifications } from "@/actions/notification-actions";
 import { NotificationBell } from "@/components/layout/notification-bell";
 import { getNotifications } from "@/lib/db/queries/notifications";
+import { Separator } from "@/components/ui/separator";
 
 import { GlobalQuickAdd } from "@/components/layout/global-quick-add";
 
@@ -41,20 +42,21 @@ export default async function DashboardLayout({
       <GlobalQuickAdd areas={areas} />
       <SidebarInset className="flex flex-col">
         <TimerInitializer timer={runningTimer} />
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 !h-4" />
           </div>
           <div className="flex-1 flex justify-center">
             <CommandMenu />
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <GlobalTimer />
             <NotificationBell notifications={notifications} />
             <ThemeToggle />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="flex flex-1 flex-col gap-4 p-4">
           {children}
         </div>
       </SidebarInset>

@@ -12,38 +12,45 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export function NotificationBell({ notifications }: { notifications: { unread: any[], recentRead: any[] } }) {
-  const [unread, setUnread] = useState(notifications.unread);
-  const [recentRead, setRecentRead] = useState(notifications.recentRead);
-  const [open, setOpen] = useState(false);
+function FormattedDate({ date }: { date: string }) {
   const [mounted, setMounted] = useState(false);
-  const router = useRouter();
-  
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Sync with prop if it changes (e.g. server revalidation)
+  if (!mounted) return null;
+
+  return (
+    <p className="text-[10px] text-muted-foreground mt-1">
+      {new Date(date).toLocaleDateString()}
+    </p>
+  );
+}
+
+export function NotificationBell({ notifications }: { notifications: { unread: any[], recentRead: any[] } }) {
+  const [unread, setUnread] = useState(notifications.unread);
+  const [recentRead, setRecentRead] = useState(notifications.recentRead);
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+
   useEffect(() => {
     setUnread(notifications.unread);
     setRecentRead(notifications.recentRead);
   }, [notifications]);
 
   const handleMarkAsRead = async (id: string, link?: string | null) => {
-    // Optimistic update
     const notification = unread.find((n: any) => n.id === id);
     if (notification) {
         const newUnread = unread.filter((n: any) => n.id !== id);
         setUnread(newUnread);
         setRecentRead([{ ...notification, read_at: new Date() }, ...recentRead].slice(0, 5));
     }
-    
-    // We don't await this to block UI, but we catch errors
+
     markAsRead(id).catch(err => {
         console.error("Failed to mark as read", err);
-        // Revert optimistic update? For now, no.
     });
-    
+
     if (link) {
         setOpen(false);
         router.push(link);
@@ -52,18 +59,18 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
 
   const handleMarkAllAsRead = async () => {
     if (unread.length === 0) return;
-    
+
     const userId = unread[0].user_id;
     const oldUnread = [...unread];
-    
+
     setRecentRead([...unread.map(n => ({...n, read_at: new Date()})), ...recentRead].slice(0, 5));
     setUnread([]);
-    
+
     try {
         await markAllAsRead(userId);
         toast.success("All notifications marked as read");
     } catch (error) {
-        setUnread(oldUnread); // Revert
+        setUnread(oldUnread);
         toast.error("Failed to mark all as read");
     }
   };
@@ -88,7 +95,7 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
             </Button>
           )}
         </div>
-        <div className="max-h-[300px] overflow-y-auto"> 
+        <div className="max-h-[300px] overflow-y-auto">
           {unread.length === 0 && recentRead.length === 0 ? (
             <div className="p-4 text-center text-sm text-muted-foreground">
               No notifications
@@ -102,9 +109,7 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
                         <div className="space-y-1">
                             <p className="text-sm font-medium leading-none">{notification.title}</p>
                             <p className="text-xs text-muted-foreground">{notification.message}</p>
-                            {mounted && (
-                                <p className="text-[10px] text-muted-foreground mt-1">{new Date(notification.created_at).toLocaleDateString()}</p>
-                            )}
+                            <FormattedDate date={notification.created_at} />
                         </div>
                     </div>
                   </div>
