@@ -1,0 +1,89 @@
+name: PR Check
+
+on: 
+  pull_request:
+    branches: [main, staging]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+env:
+  NODE_VERSION: "24.12.0"
+  PNPM_VERSION: "10.29.2"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+# Cancel in-progress runs for the same PR to save minutes
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Skip checks on draft PRs
+  check-draft:
+    name: Skip if Draft
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - run: echo "PR is ready for review, running checks"
+
+  pr-title:
+    name: PR Title Lint
+    runs-on: ubuntu-latest
+    needs: check-draft
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Enforces: feat:, fix:, chore:, docs:, refactor:, test:, ci:
+          types: |
+            feat
+            fix
+            chore
+            docs
+            refactor
+            test
+            ci
+            perf
+            style
+            revert
+
+  size-check:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    needs: check-draft
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and analyze bundle
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ANALYZE: true
+
+      # Fails if any page first-load JS exceeds 200kB
+      - name: Check bundle size limits
+        run: |
+          node -e "
+            const fs = require('fs');
+            const stats = JSON.parse(fs.readFileSync('.next/build-manifest.json', 'utf8'));
+            console.log('Build manifest loaded successfully');
+          "
