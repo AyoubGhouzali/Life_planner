@@ -1,0 +1,88 @@
+# .github/workflows/scheduled-security.yml
+name: Weekly Security Audit
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Every Monday at 7:00 AM UTC
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  full-audit:
+    name: Full Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Full pnpm audit
+        run: pnpm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: License compliance check
+        run: npx license-checker --production --failOn "GPL-2.0;GPL-3.0;AGPL-1.0;AGPL-3.0" --summary
+
+      - name: Deep Semgrep scan
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/default
+            p/typescript
+            p/nextjs
+            p/react
+            p/security-audit
+            p/owasp-top-ten
+            p/jwt
+            p/xss
+            p/sql-injection
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+      - name: Gitleaks full history scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"
