@@ -38,7 +38,7 @@ export default async function WeeklyReviewPage() {
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Weekly Review</h2>
           <p className="text-muted-foreground">
-            Reflect on the past 7 days and prepare for what's next.
+            Reflect on the past 7 days and prepare for what&apos;s next.
           </p>
         </div>
       </div>

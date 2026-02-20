@@ -10,6 +10,7 @@ import {
 import { markAsRead, markAllAsRead } from "@/actions/notification-actions";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useIsMounted } from "@/hooks/use-mounted";
 import { toast } from "sonner";
 
 export function NotificationBell({
@@ -20,12 +21,8 @@ export function NotificationBell({
   const [unread, setUnread] = useState(notifications.unread);
   const [recentRead, setRecentRead] = useState(notifications.recentRead);
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
   const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     setUnread(notifications.unread);

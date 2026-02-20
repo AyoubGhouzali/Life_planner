@@ -11,18 +11,14 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useIsMounted } from "@/hooks/use-mounted";
 
 interface LifeBalanceRadarProps {
   data: { name: string; score: number }[];
 }
 
 export function LifeBalanceRadar({ data }: LifeBalanceRadarProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsMounted();
 
   const hasActivity = data.some((d) => d.score > 0);
 

@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useIsMounted } from "@/hooks/use-mounted";
 
 interface CompletionChartProps {
   data: { date: string; count: number }[];
@@ -21,11 +21,7 @@ interface CompletionChartProps {
 }
 
 export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsMounted();
 
   if (data.length === 0) {
     return (

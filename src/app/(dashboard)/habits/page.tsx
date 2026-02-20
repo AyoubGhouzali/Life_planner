@@ -35,7 +35,7 @@ export default async function HabitsPage() {
       {habits.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed rounded-lg">
           <p className="text-muted-foreground mb-4">
-            You haven't created any habits yet.
+            You haven&apos;t created any habits yet.
           </p>
           <CreateHabitDialog areas={areas} />
         </div>

@@ -31,7 +31,7 @@ export default async function GoalsPage() {
       {goals.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed rounded-lg">
           <p className="text-muted-foreground mb-4">
-            You haven't set any goals yet.
+            You haven&apos;t set any goals yet.
           </p>
           <CreateGoalDialog />
         </div>

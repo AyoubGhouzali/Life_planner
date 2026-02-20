@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useTransition } from "react";
+import { useIsMounted } from "@/hooks/use-mounted";
 import {
   DndContext,
   DragOverlay,
@@ -32,15 +33,11 @@ interface BoardProps {
 
 export function KanbanBoard({ initialData }: BoardProps) {
   const [board, setBoard] = useState(initialData);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
 
   useEffect(() => {
     setBoard(initialData);
   }, [initialData]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const [, startTransition] = useTransition();
   const [activeId, setActiveId] = useState<string | null>(null);

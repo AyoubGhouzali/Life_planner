@@ -11,18 +11,14 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useIsMounted } from "@/hooks/use-mounted";
 
 interface TimeDistributionProps {
   data: { areaName: string; totalDuration: number | null }[];
 }
 
 export function TimeDistribution({ data }: TimeDistributionProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsMounted();
 
   const formattedData = data.map((item) => ({
     ...item,

@@ -81,7 +81,7 @@ export function TodayTasks({ tasks }: TodayTasksProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CalendarIcon className="h-5 w-5" />
-          Today's Tasks
+          Today&apos;s Tasks
         </CardTitle>
       </CardHeader>
       <CardContent>

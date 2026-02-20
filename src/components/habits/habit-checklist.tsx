@@ -74,7 +74,7 @@ export function HabitChecklist({ habits }: HabitChecklistProps) {
       <CardHeader className="pb-3">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Flame className="h-4 w-4 text-orange-500" />
-          Today's Habits
+          Today&apos;s Habits
         </CardTitle>
       </CardHeader>
       <CardContent className="px-3">

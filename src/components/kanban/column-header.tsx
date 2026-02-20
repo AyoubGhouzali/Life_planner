@@ -111,7 +111,7 @@ export function ColumnHeader({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Column</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the column "{column.name}"? Any
+              Are you sure you want to delete the column &apos;{column.name}&apos;? Any
               projects in this column will also be deleted.
             </AlertDialogDescription>
           </AlertDialogHeader>

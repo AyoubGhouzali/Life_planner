@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useIsMounted } from "@/hooks/use-mounted";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -98,15 +99,11 @@ function SortableAreaItem({
 export function SidebarAreaList({ areas: initialAreas }: SidebarAreaListProps) {
   const pathname = usePathname();
   const [areas, setAreas] = useState(initialAreas);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsMounted();
 
   useEffect(() => {
     setAreas(initialAreas);
   }, [initialAreas]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

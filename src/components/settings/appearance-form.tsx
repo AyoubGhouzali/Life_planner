@@ -12,15 +12,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { updateSettings } from "@/actions/profile-actions";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useIsMounted } from "@/hooks/use-mounted";
 
 export function SettingsAppearanceForm({ profile }: { profile: any }) {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useIsMounted();
 
   if (!mounted) {
     return null; // or a loading spinner
