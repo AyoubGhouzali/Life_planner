@@ -198,8 +198,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Generates SQL without applying — validates migration files are correct
-      - name: Drizzle generate check
-        run: pnpm drizzle-kit generate --check
+      # Validates migration files are consistent with the schema
+      - name: Drizzle check
+        run: pnpm drizzle-kit check
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
