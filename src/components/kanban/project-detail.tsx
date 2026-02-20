@@ -21,12 +21,18 @@ import {
 } from "@/components/ui/select";
 import { updateProject, deleteProject } from "@/actions/project-actions";
 import { toast } from "sonner";
-import { Calendar as CalendarIcon, Clock, Plus, Trash2, Tag, CheckSquare } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Plus, Trash2, Tag, CheckSquare, X } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { TaskList } from "@/components/tasks/task-list";
 import { NoteList } from "@/components/notes/note-list";
 import { Separator } from "@/components/ui/separator";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface ProjectDetailProps {
   project: any;
@@ -39,15 +45,26 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
   const [title, setTitle] = useState(project.title);
   const [description, setDescription] = useState(project.description || "");
   const [priority, setPriority] = useState(project.priority);
+  const [dueDate, setDueDate] = useState<Date | undefined>(
+    project.due_date ? new Date(project.due_date) : undefined
+  );
+  const [projectTags, setProjectTags] = useState<string[]>(project.tags || []);
+  const [newTag, setNewTag] = useState("");
 
   async function handleUpdate(updates: any) {
     setIsPending(true);
     try {
       const formData = new FormData();
       formData.append("title", updates.title || title);
-      formData.append("description", updates.description || description);
+      formData.append("description", updates.description ?? description);
       formData.append("priority", updates.priority || priority);
       formData.append("columnId", project.column_id);
+      const updatedDueDate = updates.dueDate !== undefined ? updates.dueDate : dueDate;
+      if (updatedDueDate) {
+        formData.append("dueDate", new Date(updatedDueDate).toISOString());
+      }
+      const updatedTags = updates.tags !== undefined ? updates.tags : projectTags;
+      formData.append("tags", JSON.stringify(updatedTags));
 
       await updateProject(project.id, formData);
       toast.success("Project updated");
@@ -128,9 +145,24 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
               <label className="text-xs font-medium text-muted-foreground flex items-center">
                 <CalendarIcon className="h-3 w-3 mr-1" /> Due Date
               </label>
-              <Button variant="outline" size="sm" className="w-full h-8 text-xs justify-start font-normal">
-                {project.due_date ? format(new Date(project.due_date), "PPP") : "Set due date"}
-              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm" className="w-full h-8 text-xs justify-start font-normal">
+                    {dueDate ? format(dueDate, "PPP") : "Set due date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dueDate}
+                    onSelect={(date) => {
+                      setDueDate(date);
+                      handleUpdate({ dueDate: date || null });
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
 
@@ -172,14 +204,49 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
               <Tag className="h-4 w-4 mr-2" /> Tags
             </h3>
             <div className="flex flex-wrap gap-2">
-              {project.tags?.map((tag: string) => (
-                <Badge key={tag} variant="secondary" className="text-[10px]">
+              {projectTags.map((tag: string) => (
+                <Badge key={tag} variant="secondary" className="text-[10px] gap-1">
                   {tag}
+                  <button
+                    onClick={() => {
+                      const updated = projectTags.filter((t) => t !== tag);
+                      setProjectTags(updated);
+                      handleUpdate({ tags: updated });
+                    }}
+                    className="hover:text-destructive"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
                 </Badge>
               ))}
-              <Button variant="outline" size="sm" className="h-6 px-2 text-[10px]">
-                <Plus className="h-3 w-3 mr-1" /> Add Tag
-              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-6 px-2 text-[10px]">
+                    <Plus className="h-3 w-3 mr-1" /> Add Tag
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-2" align="start">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const trimmed = newTag.trim();
+                      if (!trimmed || projectTags.includes(trimmed)) return;
+                      const updated = [...projectTags, trimmed];
+                      setProjectTags(updated);
+                      setNewTag("");
+                      handleUpdate({ tags: updated });
+                    }}
+                  >
+                    <Input
+                      autoFocus
+                      placeholder="Tag name..."
+                      value={newTag}
+                      onChange={(e) => setNewTag(e.target.value)}
+                      className="h-8 text-xs"
+                    />
+                  </form>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>

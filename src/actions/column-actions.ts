@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/db";
-import { columns } from "@/lib/db/schema";
+import { columns, boards } from "@/lib/db/schema";
 import { columnSchema } from "@/lib/validations/column";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -28,7 +28,7 @@ export async function createColumn(formData: FormData) {
 
   // We might need to find the areaId for revalidation
   const board = await db.query.boards.findFirst({
-    where: eq(columns.board_id, validated.boardId),
+    where: eq(boards.id, validated.boardId),
   });
 
   if (board) {
@@ -62,7 +62,7 @@ export async function updateColumn(id: string, formData: FormData) {
     .returning();
 
   const board = await db.query.boards.findFirst({
-    where: eq(columns.board_id, updatedColumn.board_id),
+    where: eq(boards.id, updatedColumn.board_id),
   });
 
   if (board) {
@@ -84,7 +84,7 @@ export async function deleteColumn(id: string) {
 
   if (deletedColumn) {
     const board = await db.query.boards.findFirst({
-      where: eq(columns.board_id, deletedColumn.board_id),
+      where: eq(boards.id, deletedColumn.board_id),
     });
 
     if (board) {

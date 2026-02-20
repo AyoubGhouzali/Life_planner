@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useTransition } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -42,6 +42,7 @@ export function KanbanBoard({ initialData }: BoardProps) {
     setMounted(true);
   }, []);
 
+  const [, startTransition] = useTransition();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [activeProject, setActiveProject] = useState<any>(null);
 
@@ -169,13 +170,19 @@ export function KanbanBoard({ initialData }: BoardProps) {
         const activeIndex = prev.columns.findIndex((col: any) => col.id === activeId);
         const overIndex = prev.columns.findIndex((col: any) => col.id === overId);
         const newColumns = arrayMove(prev.columns, activeIndex, overIndex);
-        
-        // Persist to DB
-        reorderColumns(newColumns.map((col: any) => col.id)).catch(() => {
-          toast.error("Failed to reorder columns");
-        });
-
         return { ...prev, columns: newColumns };
+      });
+
+      // Persist to DB outside the setState callback, wrapped in startTransition
+      const activeIndex = board.columns.findIndex((col: any) => col.id === activeId);
+      const overIndex = board.columns.findIndex((col: any) => col.id === overId);
+      const newColumns = arrayMove(board.columns, activeIndex, overIndex);
+      startTransition(async () => {
+        try {
+          await reorderColumns(newColumns.map((col: any) => col.id));
+        } catch {
+          toast.error("Failed to reorder columns");
+        }
       });
       return;
     }
