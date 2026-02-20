@@ -59,7 +59,7 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) =>
+                    tickFormatter={(value: string) =>
                       new Date(value).toLocaleDateString(undefined, {
                         month: "short",
                         day: "numeric",
@@ -70,10 +70,10 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => `${value}`}
+                    tickFormatter={(value: number) => `${value}`}
                   />
                   <Tooltip
-                    content={({ active, payload }) => {
+                    content={({ active, payload }: any) => {
                       if (active && payload && payload.length) {
                         return (
                           <div className="rounded-lg border bg-background p-2 shadow-sm">
@@ -119,7 +119,7 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) =>
+                    tickFormatter={(value: string) =>
                       new Date(value).toLocaleDateString(undefined, {
                         month: "short",
                         day: "numeric",
@@ -130,10 +130,10 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => `${value}`}
+                    tickFormatter={(value: number) => `${value}`}
                   />
                   <Tooltip
-                    content={({ active, payload }) => {
+                    content={({ active, payload }: any) => {
                       if (active && payload && payload.length) {
                         return (
                           <div className="rounded-lg border bg-background p-2 shadow-sm">

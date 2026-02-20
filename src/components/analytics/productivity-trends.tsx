@@ -90,7 +90,7 @@ export function ProductivityTrends({ data }: ProductivityTrendsProps) {
                 allowDecimals={false}
               />
               <Tooltip
-                content={({ active, payload }) => {
+                content={({ active, payload }: any) => {
                   if (active && payload && payload.length) {
                     return (
                       <div className="rounded-lg border bg-background p-2 shadow-sm">

@@ -66,7 +66,7 @@ export function LifeBalanceRadar({ data }: LifeBalanceRadarProps) {
                   fillOpacity={0.6}
                 />
                 <Tooltip
-                  content={({ active, payload }) => {
+                  content={({ active, payload }: any) => {
                     if (active && payload && payload.length) {
                       return (
                         <div className="rounded-lg border bg-background p-2 shadow-sm">

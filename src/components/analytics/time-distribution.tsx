@@ -76,7 +76,7 @@ export function TimeDistribution({ data }: TimeDistributionProps) {
                   width={100}
                 />
                 <Tooltip
-                  content={({ active, payload }) => {
+                  content={({ active, payload }: any) => {
                     if (active && payload && payload.length) {
                       return (
                         <div className="rounded-lg border bg-background p-2 shadow-sm">
