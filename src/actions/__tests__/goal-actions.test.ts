@@ -115,7 +115,10 @@ describe("goal-actions", () => {
     it("throws when goal not found", async () => {
       mockReturning.mockResolvedValue([undefined]);
 
-      const formData = createMockFormData({ title: "Updated", description: "Desc" });
+      const formData = createMockFormData({
+        title: "Updated",
+        description: "Desc",
+      });
       await expect(updateGoal(TEST_UUID, formData)).rejects.toThrow(
         "Goal not found",
       );
@@ -134,7 +137,9 @@ describe("goal-actions", () => {
   describe("linkProjectToGoal", () => {
     it("links a project to a goal", async () => {
       const goal = { id: TEST_UUID, user_id: mockUser.id };
-      (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(goal);
+      (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        goal,
+      );
       mockOnConflictDoNothing.mockResolvedValue(undefined);
 
       await linkProjectToGoal(TEST_UUID, TEST_UUID_2);
@@ -142,18 +147,22 @@ describe("goal-actions", () => {
     });
 
     it("throws when goal not found", async () => {
-      (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
-      await expect(
-        linkProjectToGoal(TEST_UUID, TEST_UUID_2),
-      ).rejects.toThrow("Goal not found");
+      await expect(linkProjectToGoal(TEST_UUID, TEST_UUID_2)).rejects.toThrow(
+        "Goal not found",
+      );
     });
   });
 
   describe("unlinkProjectFromGoal", () => {
     it("unlinks a project from a goal", async () => {
       const goal = { id: TEST_UUID, user_id: mockUser.id };
-      (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(goal);
+      (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        goal,
+      );
       mockWhere.mockResolvedValue(undefined);
 
       await unlinkProjectFromGoal(TEST_UUID, TEST_UUID_2);
@@ -161,7 +170,9 @@ describe("goal-actions", () => {
     });
 
     it("throws when goal not found", async () => {
-      (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       await expect(
         unlinkProjectFromGoal(TEST_UUID, TEST_UUID_2),

@@ -66,7 +66,9 @@ describe("note-actions", () => {
     it("creates a note with valid data", async () => {
       const newNote = { id: TEST_UUID, title: "Meeting Notes" };
       mockReturning.mockResolvedValue([newNote]);
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const formData = createMockFormData({
         projectId: TEST_UUID,
@@ -94,9 +96,15 @@ describe("note-actions", () => {
 
   describe("updateNote", () => {
     it("updates a note", async () => {
-      const updated = { id: TEST_UUID, title: "Updated Note", project_id: TEST_UUID };
+      const updated = {
+        id: TEST_UUID,
+        title: "Updated Note",
+        project_id: TEST_UUID,
+      };
       mockReturning.mockResolvedValue([updated]);
-      (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       const formData = createMockFormData({
         title: "Updated Note",
@@ -117,7 +125,9 @@ describe("note-actions", () => {
 
   describe("deleteNote", () => {
     it("deletes a note", async () => {
-      (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
       mockWhere.mockResolvedValue(undefined);
 
       await deleteNote(TEST_UUID);
@@ -128,21 +138,27 @@ describe("note-actions", () => {
   describe("togglePinNote", () => {
     it("toggles pin status", async () => {
       const note = { id: TEST_UUID, is_pinned: false };
-      (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(note);
+      (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        note,
+      );
       const toggled = {
         id: TEST_UUID,
         is_pinned: true,
         project_id: TEST_UUID,
       };
       mockReturning.mockResolvedValue([toggled]);
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const result = await togglePinNote(TEST_UUID);
       expect(result).toEqual(toggled);
     });
 
     it("throws when note not found", async () => {
-      (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       await expect(togglePinNote(TEST_UUID)).rejects.toThrow("Note not found");
     });

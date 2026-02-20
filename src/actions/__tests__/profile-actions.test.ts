@@ -117,18 +117,18 @@ describe("profile-actions", () => {
   describe("exportUserData", () => {
     it("exports user data successfully", async () => {
       const userData = { id: mockUser.id, display_name: "John" };
-      (db.query.profiles.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
-        userData,
-      );
+      (
+        db.query.profiles.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(userData);
 
       const result = await exportUserData(mockUser.id);
       expect(result).toEqual({ success: true, data: userData });
     });
 
     it("returns error on failure", async () => {
-      (db.query.profiles.findFirst as ReturnType<typeof vi.fn>).mockRejectedValue(
-        new Error("DB error"),
-      );
+      (
+        db.query.profiles.findFirst as ReturnType<typeof vi.fn>
+      ).mockRejectedValue(new Error("DB error"));
 
       const result = await exportUserData(mockUser.id);
       expect(result).toEqual({

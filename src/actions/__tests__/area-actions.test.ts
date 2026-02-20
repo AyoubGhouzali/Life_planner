@@ -138,7 +138,9 @@ describe("area-actions", () => {
   describe("archiveArea", () => {
     it("toggles archive status", async () => {
       const area = { id: TEST_UUID, is_archived: false };
-      (db.query.lifeAreas.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(area);
+      (
+        db.query.lifeAreas.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(area);
       mockWhere.mockResolvedValue(undefined);
 
       await archiveArea(TEST_UUID);
@@ -146,7 +148,9 @@ describe("area-actions", () => {
     });
 
     it("throws when area not found", async () => {
-      (db.query.lifeAreas.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.lifeAreas.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       await expect(archiveArea(TEST_UUID)).rejects.toThrow("Area not found");
     });

@@ -1,2 +1,2 @@
-import { LineChart } from 'recharts';
+import { LineChart } from "recharts";
 console.log(LineChart);

@@ -70,7 +70,9 @@ describe("task-actions", () => {
     it("creates a task with valid data", async () => {
       const newTask = { id: TEST_UUID, title: "New Task", status: "todo" };
       mockReturning.mockResolvedValue([newTask]);
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const formData = createMockFormData({
         title: "New Task",
@@ -113,9 +115,15 @@ describe("task-actions", () => {
 
   describe("updateTask", () => {
     it("updates a task with valid data", async () => {
-      const updated = { id: TEST_UUID, title: "Updated", project_id: TEST_UUID_2 };
+      const updated = {
+        id: TEST_UUID,
+        title: "Updated",
+        project_id: TEST_UUID_2,
+      };
       mockReturning.mockResolvedValue([updated]);
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const formData = createMockFormData({
         title: "Updated",
@@ -156,9 +164,13 @@ describe("task-actions", () => {
         project_id: TEST_UUID_2,
       };
       const toggledTask = { ...task, status: "done", project_id: TEST_UUID_2 };
-      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(task);
+      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        task,
+      );
       mockReturning.mockResolvedValue([toggledTask]);
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const result = await toggleTask(TEST_UUID);
       expect(result).toEqual(toggledTask);
@@ -172,16 +184,22 @@ describe("task-actions", () => {
         project_id: TEST_UUID_2,
       };
       const toggledTask = { ...task, status: "todo", project_id: TEST_UUID_2 };
-      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(task);
+      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        task,
+      );
       mockReturning.mockResolvedValue([toggledTask]);
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const result = await toggleTask(TEST_UUID);
       expect(result).toEqual(toggledTask);
     });
 
     it("throws when task not found", async () => {
-      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       await expect(toggleTask(TEST_UUID)).rejects.toThrow("Task not found");
     });
@@ -200,10 +218,14 @@ describe("task-actions", () => {
         position: 0,
       };
       const toggledTask = { ...task, status: "done", project_id: TEST_UUID_2 };
-      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(task);
+      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        task,
+      );
       mockReturning.mockResolvedValue([toggledTask]);
       mockValues.mockReturnValue({ returning: mockReturning });
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       await toggleTask(TEST_UUID);
 
@@ -224,7 +246,9 @@ describe("task-actions", () => {
     it("deletes a task", async () => {
       const deletedTask = { id: TEST_UUID, project_id: TEST_UUID_2 };
       mockReturning.mockResolvedValue([deletedTask]);
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       await deleteTask(TEST_UUID);
       expect(db.delete).toHaveBeenCalled();
@@ -242,7 +266,9 @@ describe("task-actions", () => {
   describe("reorderTasks", () => {
     it("reorders tasks by updating positions", async () => {
       mockWhere.mockResolvedValue(undefined);
-      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
+        null,
+      );
 
       await reorderTasks([TEST_UUID, TEST_UUID_2]);
       expect(db.update).toHaveBeenCalled();

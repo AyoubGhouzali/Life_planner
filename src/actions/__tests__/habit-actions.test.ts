@@ -129,7 +129,9 @@ describe("habit-actions", () => {
 
   describe("logHabit", () => {
     it("creates a new log when none exists for today", async () => {
-      (db.query.habitLogs.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.habitLogs.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
       mockValues.mockReturnValue({ returning: mockReturning });
 
       await logHabit(TEST_UUID);
@@ -138,7 +140,9 @@ describe("habit-actions", () => {
 
     it("increments value when log already exists", async () => {
       const existing = { id: "log-1", value: 1 };
-      (db.query.habitLogs.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(existing);
+      (
+        db.query.habitLogs.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(existing);
       mockWhere.mockResolvedValue(undefined);
 
       await logHabit(TEST_UUID);

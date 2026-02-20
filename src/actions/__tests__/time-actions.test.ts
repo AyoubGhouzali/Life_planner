@@ -61,7 +61,9 @@ describe("time-actions", () => {
   describe("startTimer", () => {
     it("starts a new timer", async () => {
       const newEntry = { id: TEST_UUID, start_time: new Date() };
-      (db.query.timeEntries.findMany as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+      (
+        db.query.timeEntries.findMany as ReturnType<typeof vi.fn>
+      ).mockResolvedValue([]);
       mockReturning.mockResolvedValue([newEntry]);
 
       const result = await startTimer(TEST_UUID);
@@ -74,12 +76,12 @@ describe("time-actions", () => {
         id: "running-timer-id",
         start_time: new Date(),
       };
-      (db.query.timeEntries.findMany as ReturnType<typeof vi.fn>).mockResolvedValue([
-        runningTimer,
-      ]);
-      (db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
-        runningTimer,
-      );
+      (
+        db.query.timeEntries.findMany as ReturnType<typeof vi.fn>
+      ).mockResolvedValue([runningTimer]);
+      (
+        db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(runningTimer);
 
       const newEntry = { id: TEST_UUID, start_time: new Date() };
       mockReturning.mockResolvedValue([newEntry]);
@@ -105,7 +107,9 @@ describe("time-actions", () => {
         id: TEST_UUID,
         start_time: new Date("2026-02-20T09:00:00Z"),
       };
-      (db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(entry);
+      (
+        db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(entry);
       const stopped = { ...entry, end_time: new Date(), duration: 3600 };
       mockReturning.mockResolvedValue([stopped]);
 
@@ -114,7 +118,9 @@ describe("time-actions", () => {
     });
 
     it("throws when entry not found", async () => {
-      (db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       await expect(stopTimer(TEST_UUID)).rejects.toThrow("Entry not found");
     });
@@ -123,14 +129,18 @@ describe("time-actions", () => {
   describe("getRunningTimer", () => {
     it("returns a running timer for the user", async () => {
       const timer = { id: TEST_UUID, start_time: new Date() };
-      (db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(timer);
+      (
+        db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(timer);
 
       const result = await getRunningTimer(mockUser.id);
       expect(result).toEqual(timer);
     });
 
     it("returns undefined when no running timer", async () => {
-      (db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+      (
+        db.query.timeEntries.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(undefined);
 
       const result = await getRunningTimer(mockUser.id);
       expect(result).toBeUndefined();

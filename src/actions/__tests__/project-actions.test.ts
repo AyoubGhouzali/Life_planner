@@ -64,7 +64,9 @@ describe("project-actions", () => {
     it("creates a project with valid data", async () => {
       const newProject = { id: TEST_UUID, title: "New Project" };
       mockReturning.mockResolvedValue([newProject]);
-      (db.query.columns.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.columns.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const formData = createMockFormData({
         title: "New Project",
@@ -98,7 +100,9 @@ describe("project-actions", () => {
         column_id: TEST_UUID_2,
       };
       mockReturning.mockResolvedValue([updated]);
-      (db.query.columns.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.columns.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const formData = createMockFormData({
         title: "Updated",
@@ -115,7 +119,9 @@ describe("project-actions", () => {
     it("deletes a project", async () => {
       const deleted = { id: TEST_UUID, column_id: TEST_UUID_2 };
       mockReturning.mockResolvedValue([deleted]);
-      (db.query.columns.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.columns.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       await deleteProject(TEST_UUID);
       expect(db.delete).toHaveBeenCalled();
@@ -130,7 +136,9 @@ describe("project-actions", () => {
         position: 0,
       };
       mockReturning.mockResolvedValue([moved]);
-      (db.query.columns.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.columns.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const result = await moveProject(TEST_UUID, TEST_UUID_2, 0);
       expect(result).toEqual(moved);
@@ -150,21 +158,27 @@ describe("project-actions", () => {
   describe("archiveProject", () => {
     it("toggles archive status", async () => {
       const project = { id: TEST_UUID, is_archived: false };
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(project);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(project);
       const archived = {
         id: TEST_UUID,
         is_archived: true,
         column_id: TEST_UUID_2,
       };
       mockReturning.mockResolvedValue([archived]);
-      (db.query.columns.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.columns.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       const result = await archiveProject(TEST_UUID);
       expect(result).toEqual(archived);
     });
 
     it("throws when project not found", async () => {
-      (db.query.projects.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+      (
+        db.query.projects.findFirst as ReturnType<typeof vi.fn>
+      ).mockResolvedValue(null);
 
       await expect(archiveProject(TEST_UUID)).rejects.toThrow(
         "Project not found",
