@@ -58,7 +58,9 @@ export function RecentActivity({ items }: RecentActivityProps) {
                 <div className="flex-1 space-y-1">
                   <p className="text-sm font-medium leading-none">
                     {item.type === "task" ? "Updated task" : "Updated project"}{" "}
-                    <span className="font-semibold">&quot;{item.title}&quot;</span>
+                    <span className="font-semibold">
+                      &quot;{item.title}&quot;
+                    </span>
                   </p>
                   <p className="text-xs text-muted-foreground">
                     in {item.parentTitle} •{" "}

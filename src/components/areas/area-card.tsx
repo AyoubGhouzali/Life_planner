@@ -121,7 +121,8 @@ export function AreaCard({ area, projectCount }: AreaCardProps) {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the
-              area &quot;{area.name}&quot; and all its boards, projects, and tasks.
+              area &quot;{area.name}&quot; and all its boards, projects, and
+              tasks.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
