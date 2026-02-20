@@ -16,7 +16,7 @@ export type AnalyticsPeriod = "week" | "month" | "last30" | "last90" | "custom";
 export async function getCompletionOverTime(
   userId: string,
   period: AnalyticsPeriod,
-  dateRange?: { from: Date; to: Date }
+  dateRange?: { from: Date; to: Date },
 ) {
   let fromDate = new Date();
   const toDate = dateRange?.to || new Date();
@@ -56,8 +56,8 @@ export async function getCompletionOverTime(
         eq(lifeAreas.user_id, userId),
         eq(tasks.status, "done"),
         gte(tasks.completed_at, fromDate),
-        lte(tasks.completed_at, toDate)
-      )
+        lte(tasks.completed_at, toDate),
+      ),
     )
     .groupBy(sql`DATE(${tasks.completed_at})`)
     .orderBy(sql`DATE(${tasks.completed_at})`);
@@ -67,7 +67,7 @@ export async function getCompletionOverTime(
 
 export async function getAreaDistribution(
   userId: string,
-  dateRange: { from: Date; to: Date }
+  dateRange: { from: Date; to: Date },
 ) {
   const result = await db
     .select({
@@ -85,8 +85,8 @@ export async function getAreaDistribution(
         eq(lifeAreas.user_id, userId),
         eq(tasks.status, "done"),
         gte(tasks.completed_at, dateRange.from),
-        lte(tasks.completed_at, dateRange.to)
-      )
+        lte(tasks.completed_at, dateRange.to),
+      ),
     )
     .groupBy(lifeAreas.id, lifeAreas.name, lifeAreas.color);
 
@@ -113,8 +113,8 @@ export async function getProductivityTrends(userId: string) {
       and(
         eq(lifeAreas.user_id, userId),
         eq(tasks.status, "done"),
-        gte(tasks.completed_at, thisWeekStart)
-      )
+        gte(tasks.completed_at, thisWeekStart),
+      ),
     );
 
   const lastWeekTasks = await db
@@ -129,8 +129,8 @@ export async function getProductivityTrends(userId: string) {
         eq(lifeAreas.user_id, userId),
         eq(tasks.status, "done"),
         gte(tasks.completed_at, lastWeekStart),
-        lte(tasks.completed_at, thisWeekStart)
-      )
+        lte(tasks.completed_at, thisWeekStart),
+      ),
     );
 
   return {
@@ -139,7 +139,10 @@ export async function getProductivityTrends(userId: string) {
   };
 }
 
-export async function getLifeBalanceScores(userId: string, dateRange: { from: Date; to: Date }) {
+export async function getLifeBalanceScores(
+  userId: string,
+  dateRange: { from: Date; to: Date },
+) {
   // Score based on activity (tasks completed + habits logged + time tracked)
   const areaActivity = await db
     .select({
@@ -153,29 +156,41 @@ export async function getLifeBalanceScores(userId: string, dateRange: { from: Da
     .leftJoin(boards, eq(lifeAreas.id, boards.area_id))
     .leftJoin(columns, eq(boards.id, columns.board_id))
     .leftJoin(projects, eq(columns.id, projects.column_id))
-    .leftJoin(tasks, and(
-      eq(projects.id, tasks.project_id),
-      eq(tasks.status, "done"),
-      gte(tasks.completed_at, dateRange.from),
-      lte(tasks.completed_at, dateRange.to)
-    ))
+    .leftJoin(
+      tasks,
+      and(
+        eq(projects.id, tasks.project_id),
+        eq(tasks.status, "done"),
+        gte(tasks.completed_at, dateRange.from),
+        lte(tasks.completed_at, dateRange.to),
+      ),
+    )
     .leftJoin(habits, eq(lifeAreas.id, habits.area_id))
-    .leftJoin(habitLogs, and(
-      eq(habits.id, habitLogs.habit_id),
-      gte(habitLogs.completed_at, dateRange.from),
-      lte(habitLogs.completed_at, dateRange.to)
-    ))
-    .leftJoin(timeEntries, and(
-      eq(projects.id, timeEntries.project_id),
-      gte(timeEntries.start_time, dateRange.from),
-      lte(timeEntries.start_time, dateRange.to)
-    ))
+    .leftJoin(
+      habitLogs,
+      and(
+        eq(habits.id, habitLogs.habit_id),
+        gte(habitLogs.completed_at, dateRange.from),
+        lte(habitLogs.completed_at, dateRange.to),
+      ),
+    )
+    .leftJoin(
+      timeEntries,
+      and(
+        eq(projects.id, timeEntries.project_id),
+        gte(timeEntries.start_time, dateRange.from),
+        lte(timeEntries.start_time, dateRange.to),
+      ),
+    )
     .where(eq(lifeAreas.user_id, userId))
     .groupBy(lifeAreas.id, lifeAreas.name);
 
-  return areaActivity.map(area => ({
+  return areaActivity.map((area) => ({
     name: area.areaName,
-    score: (area.taskCount * 10) + (area.habitCount * 5) + (Math.floor(area.totalTime / 3600) * 2),
+    score:
+      area.taskCount * 10 +
+      area.habitCount * 5 +
+      Math.floor(area.totalTime / 3600) * 2,
   }));
 }
 
@@ -194,8 +209,8 @@ export async function getOverdueAnalysis(userId: string) {
       and(
         eq(lifeAreas.user_id, userId),
         eq(tasks.status, "todo"),
-        sql`${tasks.due_date} < NOW()`
-      )
+        sql`${tasks.due_date} < NOW()`,
+      ),
     )
     .groupBy(lifeAreas.name);
 
@@ -225,17 +240,23 @@ export async function getStreakSummary(userId: string) {
       completionCount: sql<number>`COUNT(${habitLogs.id})`,
     })
     .from(habits)
-    .leftJoin(habitLogs, and(
-      eq(habits.id, habitLogs.habit_id),
-      gte(habitLogs.completed_at, thirtyDaysAgo)
-    ))
+    .leftJoin(
+      habitLogs,
+      and(
+        eq(habits.id, habitLogs.habit_id),
+        gte(habitLogs.completed_at, thirtyDaysAgo),
+      ),
+    )
     .where(and(eq(habits.user_id, userId), eq(habits.is_archived, false)))
     .groupBy(habits.id, habits.name);
 
   return habitsWithStats;
 }
 
-export async function getTimeDistribution(userId: string, dateRange: { from: Date; to: Date }) {
+export async function getTimeDistribution(
+  userId: string,
+  dateRange: { from: Date; to: Date },
+) {
   const result = await db
     .select({
       areaName: lifeAreas.name,
@@ -250,15 +271,18 @@ export async function getTimeDistribution(userId: string, dateRange: { from: Dat
       and(
         eq(lifeAreas.user_id, userId),
         gte(timeEntries.start_time, dateRange.from),
-        lte(timeEntries.start_time, dateRange.to)
-      )
+        lte(timeEntries.start_time, dateRange.to),
+      ),
     )
     .groupBy(lifeAreas.name);
 
   return result;
 }
 
-export async function getMostActiveAreas(userId: string, dateRange: { from: Date; to: Date }) {
+export async function getMostActiveAreas(
+  userId: string,
+  dateRange: { from: Date; to: Date },
+) {
   const result = await db
     .select({
       areaName: lifeAreas.name,
@@ -268,17 +292,23 @@ export async function getMostActiveAreas(userId: string, dateRange: { from: Date
     .leftJoin(boards, eq(lifeAreas.id, boards.area_id))
     .leftJoin(columns, eq(boards.id, columns.board_id))
     .leftJoin(projects, eq(columns.id, projects.column_id))
-    .leftJoin(tasks, and(
-      eq(projects.id, tasks.project_id),
-      gte(tasks.updated_at, dateRange.from),
-      lte(tasks.updated_at, dateRange.to)
-    ))
+    .leftJoin(
+      tasks,
+      and(
+        eq(projects.id, tasks.project_id),
+        gte(tasks.updated_at, dateRange.from),
+        lte(tasks.updated_at, dateRange.to),
+      ),
+    )
     .leftJoin(habits, eq(lifeAreas.id, habits.area_id))
-    .leftJoin(habitLogs, and(
-      eq(habits.id, habitLogs.habit_id),
-      gte(habitLogs.completed_at, dateRange.from),
-      lte(habitLogs.completed_at, dateRange.to)
-    ))
+    .leftJoin(
+      habitLogs,
+      and(
+        eq(habits.id, habitLogs.habit_id),
+        gte(habitLogs.completed_at, dateRange.from),
+        lte(habitLogs.completed_at, dateRange.to),
+      ),
+    )
     .where(eq(lifeAreas.user_id, userId))
     .groupBy(lifeAreas.id, lifeAreas.name)
     .orderBy(desc(sql`activityCount`))
@@ -308,8 +338,8 @@ export async function getWeeklySummary(userId: string) {
       and(
         eq(lifeAreas.user_id, userId),
         eq(tasks.status, "done"),
-        gte(tasks.completed_at, lastWeekStart)
-      )
+        gte(tasks.completed_at, lastWeekStart),
+      ),
     );
 
   const overdueTasks = await db
@@ -328,8 +358,8 @@ export async function getWeeklySummary(userId: string) {
       and(
         eq(lifeAreas.user_id, userId),
         eq(tasks.status, "todo"),
-        sql`${tasks.due_date} < NOW()`
-      )
+        sql`${tasks.due_date} < NOW()`,
+      ),
     );
 
   const habitStats = await db
@@ -338,10 +368,13 @@ export async function getWeeklySummary(userId: string) {
       count: sql<number>`COUNT(${habitLogs.id})`,
     })
     .from(habits)
-    .leftJoin(habitLogs, and(
-      eq(habits.id, habitLogs.habit_id),
-      gte(habitLogs.completed_at, lastWeekStart)
-    ))
+    .leftJoin(
+      habitLogs,
+      and(
+        eq(habits.id, habitLogs.habit_id),
+        gte(habitLogs.completed_at, lastWeekStart),
+      ),
+    )
     .where(and(eq(habits.user_id, userId), eq(habits.is_archived, false)))
     .groupBy(habits.id, habits.name);
 

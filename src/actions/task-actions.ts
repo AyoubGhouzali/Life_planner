@@ -9,17 +9,23 @@ import { revalidatePath } from "next/cache";
 
 export async function createTask(formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const title = formData.get("title") as string;
   const projectId = formData.get("projectId") as string;
-  const parentTaskId = formData.get("parentTaskId") as string || null;
+  const parentTaskId = (formData.get("parentTaskId") as string) || null;
   const status = formData.get("status") as "todo" | "in_progress" | "done";
-  const priority = formData.get("priority") as "low" | "medium" | "high" | "urgent";
-  const dueDate = formData.get("dueDate") as string || null;
+  const priority = formData.get("priority") as
+    | "low"
+    | "medium"
+    | "high"
+    | "urgent";
+  const dueDate = (formData.get("dueDate") as string) || null;
   const isRecurring = formData.get("isRecurring") === "true";
-  const recurrenceRule = formData.get("recurrenceRule") as string || null;
+  const recurrenceRule = (formData.get("recurrenceRule") as string) || null;
 
   const validated = taskSchema.parse({
     title,
@@ -32,26 +38,29 @@ export async function createTask(formData: FormData) {
     recurrenceRule,
   });
 
-  const [newTask] = await db.insert(tasks).values({
-    project_id: validated.projectId,
-    parent_task_id: validated.parentTaskId,
-    title: validated.title,
-    status: validated.status,
-    priority: validated.priority,
-    due_date: validated.dueDate ? new Date(validated.dueDate) : null,
-    is_recurring: validated.isRecurring,
-    recurrence_rule: validated.recurrenceRule,
-  }).returning();
+  const [newTask] = await db
+    .insert(tasks)
+    .values({
+      project_id: validated.projectId,
+      parent_task_id: validated.parentTaskId,
+      title: validated.title,
+      status: validated.status,
+      priority: validated.priority,
+      due_date: validated.dueDate ? new Date(validated.dueDate) : null,
+      is_recurring: validated.isRecurring,
+      recurrence_rule: validated.recurrenceRule,
+    })
+    .returning();
 
   const project = await db.query.projects.findFirst({
     where: eq(projects.id, validated.projectId),
     with: {
       column: {
         with: {
-          board: true
-        }
-      }
-    }
+          board: true,
+        },
+      },
+    },
   });
 
   if (project?.column?.board) {
@@ -64,17 +73,23 @@ export async function createTask(formData: FormData) {
 
 export async function updateTask(id: string, formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const title = formData.get("title") as string;
   const projectId = formData.get("projectId") as string;
-  const parentTaskId = formData.get("parentTaskId") as string || null;
+  const parentTaskId = (formData.get("parentTaskId") as string) || null;
   const status = formData.get("status") as "todo" | "in_progress" | "done";
-  const priority = formData.get("priority") as "low" | "medium" | "high" | "urgent";
-  const dueDate = formData.get("dueDate") as string || null;
+  const priority = formData.get("priority") as
+    | "low"
+    | "medium"
+    | "high"
+    | "urgent";
+  const dueDate = (formData.get("dueDate") as string) || null;
   const isRecurring = formData.get("isRecurring") === "true";
-  const recurrenceRule = formData.get("recurrenceRule") as string || null;
+  const recurrenceRule = (formData.get("recurrenceRule") as string) || null;
 
   const validated = taskSchema.parse({
     title,
@@ -96,7 +111,7 @@ export async function updateTask(id: string, formData: FormData) {
       due_date: validated.dueDate ? new Date(validated.dueDate) : null,
       is_recurring: validated.isRecurring,
       recurrence_rule: validated.recurrenceRule,
-      updated_at: new Date()
+      updated_at: new Date(),
     })
     .where(eq(tasks.id, id))
     .returning();
@@ -106,10 +121,10 @@ export async function updateTask(id: string, formData: FormData) {
     with: {
       column: {
         with: {
-          board: true
-        }
-      }
-    }
+          board: true,
+        },
+      },
+    },
   });
 
   if (project?.column?.board) {
@@ -122,7 +137,9 @@ export async function updateTask(id: string, formData: FormData) {
 
 export async function toggleTask(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const task = await db.query.tasks.findFirst({
@@ -139,7 +156,7 @@ export async function toggleTask(id: string) {
     .set({
       status: newStatus,
       completed_at: completedAt,
-      updated_at: new Date()
+      updated_at: new Date(),
     })
     .where(eq(tasks.id, id))
     .returning();
@@ -147,7 +164,7 @@ export async function toggleTask(id: string) {
   // Handle recurrence
   if (newStatus === "done" && task.is_recurring && task.recurrence_rule) {
     let nextDueDate = task.due_date ? new Date(task.due_date) : new Date();
-    
+
     // Safety check: if invalid date
     if (isNaN(nextDueDate.getTime())) nextDueDate = new Date();
 
@@ -165,7 +182,7 @@ export async function toggleTask(id: string) {
         nextDueDate.setMonth(nextDueDate.getMonth() + 1);
         break;
     }
-    
+
     await db.insert(tasks).values({
       project_id: task.project_id,
       parent_task_id: task.parent_task_id,
@@ -175,7 +192,7 @@ export async function toggleTask(id: string) {
       due_date: nextDueDate,
       is_recurring: true,
       recurrence_rule: task.recurrence_rule,
-      position: task.position, 
+      position: task.position,
     });
   }
 
@@ -184,10 +201,10 @@ export async function toggleTask(id: string) {
     with: {
       column: {
         with: {
-          board: true
-        }
-      }
-    }
+          board: true,
+        },
+      },
+    },
   });
 
   if (project?.column?.board) {
@@ -200,7 +217,9 @@ export async function toggleTask(id: string) {
 
 export async function deleteTask(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const [deletedTask] = await db
@@ -214,10 +233,10 @@ export async function deleteTask(id: string) {
       with: {
         column: {
           with: {
-            board: true
-          }
-        }
-      }
+            board: true,
+          },
+        },
+      },
     });
 
     if (project?.column?.board) {
@@ -229,16 +248,15 @@ export async function deleteTask(id: string) {
 
 export async function reorderTasks(orderedIds: string[]) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   await Promise.all(
     orderedIds.map((id, index) =>
-      db
-        .update(tasks)
-        .set({ position: index })
-        .where(eq(tasks.id, id))
-    )
+      db.update(tasks).set({ position: index }).where(eq(tasks.id, id)),
+    ),
   );
 
   const firstTask = await db.query.tasks.findFirst({
@@ -248,12 +266,12 @@ export async function reorderTasks(orderedIds: string[]) {
         with: {
           column: {
             with: {
-              board: true
-            }
-          }
-        }
-      }
-    }
+              board: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   if (firstTask?.project?.column?.board) {

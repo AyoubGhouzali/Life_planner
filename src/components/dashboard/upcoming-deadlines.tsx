@@ -36,15 +36,18 @@ export function UpcomingDeadlines({ tasks }: UpcomingDeadlinesProps) {
   });
 
   // Group by date
-  const groupedTasks = filteredTasks.reduce((acc, task) => {
-    if (!task.dueDate) return acc;
-    const dateKey = format(task.dueDate, "yyyy-MM-dd");
-    if (!acc[dateKey]) {
-      acc[dateKey] = [];
-    }
-    acc[dateKey].push(task);
-    return acc;
-  }, {} as Record<string, Task[]>);
+  const groupedTasks = filteredTasks.reduce(
+    (acc, task) => {
+      if (!task.dueDate) return acc;
+      const dateKey = format(task.dueDate, "yyyy-MM-dd");
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(task);
+      return acc;
+    },
+    {} as Record<string, Task[]>,
+  );
 
   const sortedDates = Object.keys(groupedTasks).sort();
 
@@ -86,18 +89,21 @@ export function UpcomingDeadlines({ tasks }: UpcomingDeadlinesProps) {
                               task.priority === "urgent"
                                 ? "bg-red-500"
                                 : task.priority === "high"
-                                ? "bg-orange-500"
-                                : task.priority === "medium"
-                                ? "bg-blue-500"
-                                : "bg-slate-500"
+                                  ? "bg-orange-500"
+                                  : task.priority === "medium"
+                                    ? "bg-blue-500"
+                                    : "bg-slate-500"
                             }`}
                           />
                           <span className="truncate font-medium">
                             {task.title}
                           </span>
                         </div>
-                        <Badge variant="secondary" className="text-[10px] h-5 truncate max-w-[100px]">
-                            {task.projectTitle}
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] h-5 truncate max-w-[100px]"
+                        >
+                          {task.projectTitle}
                         </Badge>
                       </div>
                     ))}

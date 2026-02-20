@@ -32,7 +32,11 @@ export function AreaHeader({ area }: AreaHeaderProps) {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" onClick={() => setIsSettingsOpen(true)}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setIsSettingsOpen(true)}
+        >
           <Settings2 className="mr-2 h-4 w-4" />
           Area Settings
         </Button>

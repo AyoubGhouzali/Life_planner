@@ -28,16 +28,20 @@ export function HabitChecklist({ habits }: HabitChecklistProps) {
 
   const handleToggle = async (habitId: string, isCompleted: boolean) => {
     // Optimistic update
-    setLocalHabits(prev => prev.map(h => {
+    setLocalHabits((prev) =>
+      prev.map((h) => {
         if (h.id === habitId) {
-            return {
-                ...h,
-                isCompletedToday: !isCompleted,
-                currentStreak: !isCompleted ? h.currentStreak + 1 : Math.max(0, h.currentStreak - 1)
-            };
+          return {
+            ...h,
+            isCompletedToday: !isCompleted,
+            currentStreak: !isCompleted
+              ? h.currentStreak + 1
+              : Math.max(0, h.currentStreak - 1),
+          };
         }
         return h;
-    }));
+      }),
+    );
 
     try {
       if (isCompleted) {
@@ -48,16 +52,20 @@ export function HabitChecklist({ habits }: HabitChecklistProps) {
     } catch (error) {
       toast.error("Failed to update habit");
       // Revert optimistic update on error
-      setLocalHabits(prev => prev.map(h => {
-        if (h.id === habitId) {
-          return {
-            ...h,
-            isCompletedToday: isCompleted,
-            currentStreak: isCompleted ? h.currentStreak + 1 : Math.max(0, h.currentStreak - 1)
-          };
-        }
-        return h;
-      }));
+      setLocalHabits((prev) =>
+        prev.map((h) => {
+          if (h.id === habitId) {
+            return {
+              ...h,
+              isCompletedToday: isCompleted,
+              currentStreak: isCompleted
+                ? h.currentStreak + 1
+                : Math.max(0, h.currentStreak - 1),
+            };
+          }
+          return h;
+        }),
+      );
     }
   };
 
@@ -83,7 +91,9 @@ export function HabitChecklist({ habits }: HabitChecklistProps) {
               >
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => handleToggle(habit.id, habit.isCompletedToday)}
+                    onClick={() =>
+                      handleToggle(habit.id, habit.isCompletedToday)
+                    }
                     className="focus:outline-none"
                   >
                     {habit.isCompletedToday ? (
@@ -92,10 +102,13 @@ export function HabitChecklist({ habits }: HabitChecklistProps) {
                       <Circle className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                     )}
                   </button>
-                  <span className={cn(
-                    "text-sm font-medium",
-                    habit.isCompletedToday && "text-muted-foreground line-through"
-                  )}>
+                  <span
+                    className={cn(
+                      "text-sm font-medium",
+                      habit.isCompletedToday &&
+                        "text-muted-foreground line-through",
+                    )}
+                  >
                     {habit.name}
                   </span>
                 </div>

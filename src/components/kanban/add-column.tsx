@@ -53,9 +53,9 @@ export function AddColumn({ boardId }: AddColumnProps) {
             <Button size="sm" type="submit" disabled={isPending}>
               {isPending ? "Adding..." : "Add Column"}
             </Button>
-            <Button 
-              size="sm" 
-              variant="ghost" 
+            <Button
+              size="sm"
+              variant="ghost"
               onClick={() => setIsEditing(false)}
               disabled={isPending}
             >

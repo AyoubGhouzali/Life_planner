@@ -9,7 +9,9 @@ import { revalidatePath } from "next/cache";
 
 export async function createArea(formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const name = formData.get("name") as string;
@@ -19,10 +21,13 @@ export async function createArea(formData: FormData) {
 
   const validated = areaSchema.parse({ name, icon, color, description });
 
-  const [newArea] = await db.insert(lifeAreas).values({
-    ...validated,
-    user_id: user.id,
-  }).returning();
+  const [newArea] = await db
+    .insert(lifeAreas)
+    .values({
+      ...validated,
+      user_id: user.id,
+    })
+    .returning();
 
   revalidatePath("/", "layout");
   return newArea;
@@ -30,7 +35,9 @@ export async function createArea(formData: FormData) {
 
 export async function updateArea(id: string, formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const name = formData.get("name") as string;
@@ -52,7 +59,9 @@ export async function updateArea(id: string, formData: FormData) {
 
 export async function deleteArea(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   await db
@@ -64,7 +73,9 @@ export async function deleteArea(id: string) {
 
 export async function archiveArea(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const area = await db.query.lifeAreas.findFirst({
@@ -83,7 +94,9 @@ export async function archiveArea(id: string) {
 
 export async function reorderAreas(orderedIds: string[]) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   await Promise.all(
@@ -91,8 +104,8 @@ export async function reorderAreas(orderedIds: string[]) {
       db
         .update(lifeAreas)
         .set({ position: index })
-        .where(and(eq(lifeAreas.id, id), eq(lifeAreas.user_id, user.id)))
-    )
+        .where(and(eq(lifeAreas.id, id), eq(lifeAreas.user_id, user.id))),
+    ),
   );
 
   revalidatePath("/", "layout");

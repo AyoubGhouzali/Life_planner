@@ -26,7 +26,9 @@ export function AreaDistribution({ data }: AreaDistributionProps) {
           <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
             <PieChartIcon className="h-10 w-10 mb-2 opacity-50" />
             <p className="text-sm">No task distribution data yet.</p>
-            <p className="text-xs mt-1">Complete tasks across areas to see distribution.</p>
+            <p className="text-xs mt-1">
+              Complete tasks across areas to see distribution.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -53,9 +55,9 @@ export function AreaDistribution({ data }: AreaDistributionProps) {
                 paddingAngle={5}
               >
                 {data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.areaColor || `hsl(var(--primary))`} 
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={entry.areaColor || `hsl(var(--primary))`}
                   />
                 ))}
               </Pie>
@@ -78,7 +80,7 @@ export function AreaDistribution({ data }: AreaDistributionProps) {
                   return null;
                 }}
               />
-              <Legend verticalAlign="bottom" height={36}/>
+              <Legend verticalAlign="bottom" height={36} />
             </PieChart>
           </ResponsiveContainer>
         </div>

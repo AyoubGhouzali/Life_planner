@@ -88,7 +88,10 @@ export function CreateGoalDialog() {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Run a Marathon, Launch App" {...field} />
+                    <Input
+                      placeholder="e.g., Run a Marathon, Launch App"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -118,13 +121,13 @@ export function CreateGoalDialog() {
                   <FormItem>
                     <FormLabel>Target Date</FormLabel>
                     <FormControl>
-                        <Input type="date" {...field} value={field.value || ""} />
+                      <Input type="date" {...field} value={field.value || ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-               <FormField
+              <FormField
                 control={form.control}
                 name="targetValue"
                 render={({ field }) => (
@@ -135,7 +138,9 @@ export function CreateGoalDialog() {
                         type="number"
                         {...field}
                         value={field.value || 0}
-                        onChange={(e) => field.onChange(parseInt(e.target.value))}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value))
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -150,7 +155,11 @@ export function CreateGoalDialog() {
                 <FormItem>
                   <FormLabel>Unit (e.g., km, books, %)</FormLabel>
                   <FormControl>
-                    <Input placeholder="km" {...field} value={field.value || ""} />
+                    <Input
+                      placeholder="km"
+                      {...field}
+                      value={field.value || ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

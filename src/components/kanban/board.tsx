@@ -46,7 +46,10 @@ export function KanbanBoard({ initialData }: BoardProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [activeProject, setActiveProject] = useState<any>(null);
 
-  const columnIds = useMemo(() => board.columns.map((col: any) => col.id), [board.columns]);
+  const columnIds = useMemo(
+    () => board.columns.map((col: any) => col.id),
+    [board.columns],
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -56,13 +59,13 @@ export function KanbanBoard({ initialData }: BoardProps) {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   function handleDragStart(event: DragStartEvent) {
     const { active } = event;
     setActiveId(active.id as string);
-    
+
     for (const column of board.columns) {
       const project = column.projects.find((p: any) => p.id === active.id);
       if (project) {
@@ -90,18 +93,22 @@ export function KanbanBoard({ initialData }: BoardProps) {
     // Moving a project over another project
     if (isActiveAProject && isOverAProject) {
       setBoard((prev: any) => {
-        const activeColumn = prev.columns.find((col: any) => 
-          col.projects.some((p: any) => p.id === activeId)
+        const activeColumn = prev.columns.find((col: any) =>
+          col.projects.some((p: any) => p.id === activeId),
         );
-        const overColumn = prev.columns.find((col: any) => 
-          col.projects.some((p: any) => p.id === overId)
+        const overColumn = prev.columns.find((col: any) =>
+          col.projects.some((p: any) => p.id === overId),
         );
 
         if (!activeColumn || !overColumn) return prev;
 
         if (activeColumn.id !== overColumn.id) {
-          const activeIndex = activeColumn.projects.findIndex((p: any) => p.id === activeId);
-          const overIndex = overColumn.projects.findIndex((p: any) => p.id === overId);
+          const activeIndex = activeColumn.projects.findIndex(
+            (p: any) => p.id === activeId,
+          );
+          const overIndex = overColumn.projects.findIndex(
+            (p: any) => p.id === overId,
+          );
 
           const newActiveProjects = [...activeColumn.projects];
           const [movedProject] = newActiveProjects.splice(activeIndex, 1);
@@ -113,8 +120,10 @@ export function KanbanBoard({ initialData }: BoardProps) {
           return {
             ...prev,
             columns: prev.columns.map((col: any) => {
-              if (col.id === activeColumn.id) return { ...col, projects: newActiveProjects };
-              if (col.id === overColumn.id) return { ...col, projects: newOverProjects };
+              if (col.id === activeColumn.id)
+                return { ...col, projects: newActiveProjects };
+              if (col.id === overColumn.id)
+                return { ...col, projects: newOverProjects };
               return col;
             }),
           };
@@ -127,14 +136,16 @@ export function KanbanBoard({ initialData }: BoardProps) {
     // Moving a project over a column
     if (isActiveAProject && isOverAColumn) {
       setBoard((prev: any) => {
-        const activeColumn = prev.columns.find((col: any) => 
-          col.projects.some((p: any) => p.id === activeId)
+        const activeColumn = prev.columns.find((col: any) =>
+          col.projects.some((p: any) => p.id === activeId),
         );
         const overColumnId = overId;
 
         if (!activeColumn || activeColumn.id === overColumnId) return prev;
 
-        const activeIndex = activeColumn.projects.findIndex((p: any) => p.id === activeId);
+        const activeIndex = activeColumn.projects.findIndex(
+          (p: any) => p.id === activeId,
+        );
         const newActiveProjects = [...activeColumn.projects];
         const [movedProject] = newActiveProjects.splice(activeIndex, 1);
         movedProject.column_id = overColumnId;
@@ -142,8 +153,10 @@ export function KanbanBoard({ initialData }: BoardProps) {
         return {
           ...prev,
           columns: prev.columns.map((col: any) => {
-            if (col.id === activeColumn.id) return { ...col, projects: newActiveProjects };
-            if (col.id === overColumnId) return { ...col, projects: [...col.projects, movedProject] };
+            if (col.id === activeColumn.id)
+              return { ...col, projects: newActiveProjects };
+            if (col.id === overColumnId)
+              return { ...col, projects: [...col.projects, movedProject] };
             return col;
           }),
         };
@@ -167,15 +180,23 @@ export function KanbanBoard({ initialData }: BoardProps) {
 
     if (isActiveAColumn) {
       setBoard((prev: any) => {
-        const activeIndex = prev.columns.findIndex((col: any) => col.id === activeId);
-        const overIndex = prev.columns.findIndex((col: any) => col.id === overId);
+        const activeIndex = prev.columns.findIndex(
+          (col: any) => col.id === activeId,
+        );
+        const overIndex = prev.columns.findIndex(
+          (col: any) => col.id === overId,
+        );
         const newColumns = arrayMove(prev.columns, activeIndex, overIndex);
         return { ...prev, columns: newColumns };
       });
 
       // Persist to DB outside the setState callback, wrapped in startTransition
-      const activeIndex = board.columns.findIndex((col: any) => col.id === activeId);
-      const overIndex = board.columns.findIndex((col: any) => col.id === overId);
+      const activeIndex = board.columns.findIndex(
+        (col: any) => col.id === activeId,
+      );
+      const overIndex = board.columns.findIndex(
+        (col: any) => col.id === overId,
+      );
       const newColumns = arrayMove(board.columns, activeIndex, overIndex);
       startTransition(async () => {
         try {
@@ -191,17 +212,21 @@ export function KanbanBoard({ initialData }: BoardProps) {
     const isOverAProject = over.data.current?.type === "Project";
 
     if (isActiveAProject) {
-      const activeColumn = board.columns.find((col: any) => 
-        col.projects.some((p: any) => p.id === activeId)
+      const activeColumn = board.columns.find((col: any) =>
+        col.projects.some((p: any) => p.id === activeId),
       );
-      
+
       if (!activeColumn) return;
 
-      const activeIndex = activeColumn.projects.findIndex((p: any) => p.id === activeId);
+      const activeIndex = activeColumn.projects.findIndex(
+        (p: any) => p.id === activeId,
+      );
       let overIndex = -1;
 
       if (isOverAProject) {
-        overIndex = activeColumn.projects.findIndex((p: any) => p.id === overId);
+        overIndex = activeColumn.projects.findIndex(
+          (p: any) => p.id === overId,
+        );
       } else {
         // If it was dropped over a column, it's already at the end of that column from handleDragOver
         overIndex = activeColumn.projects.length - 1;
@@ -252,14 +277,17 @@ export function KanbanBoard({ initialData }: BoardProps) {
       onDragEnd={handleDragEnd}
     >
       <div className="flex gap-4 h-full overflow-x-auto pb-4">
-        <SortableContext items={columnIds} strategy={horizontalListSortingStrategy}>
+        <SortableContext
+          items={columnIds}
+          strategy={horizontalListSortingStrategy}
+        >
           {board.columns.map((column: any) => (
             <KanbanColumn key={column.id} column={column} />
           ))}
         </SortableContext>
         <AddColumn boardId={board.id} />
       </div>
-      
+
       <DragOverlay>
         {activeId && activeProject ? (
           <ProjectCard project={activeProject} isOverlay />

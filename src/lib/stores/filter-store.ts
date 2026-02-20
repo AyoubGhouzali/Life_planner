@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface FilterState {
   areaId: string | null;
@@ -21,5 +21,6 @@ export const useFilterStore = create<FilterState>((set) => ({
   setStatus: (status) => set({ status }),
   setPriority: (priority) => set({ priority }),
   setSearch: (search) => set({ search }),
-  clearFilters: () => set({ areaId: null, status: [], priority: [], search: "" }),
+  clearFilters: () =>
+    set({ areaId: null, status: [], priority: [], search: "" }),
 }));

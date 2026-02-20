@@ -55,33 +55,38 @@ export function SettingsAccountForm({ profile }: { profile: any }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col space-y-2">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" disabled={loading} className="w-full sm:w-auto">
-                  {loading ? "Deleting..." : "Delete Account"}
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete your
-                    account and remove your data from our servers.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={onDeleteAccount}
-                    className="bg-red-500 hover:bg-red-600 focus:ring-red-500"
-                  >
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-           <p className="text-sm text-red-500/80">
-            Deleting your account will remove all your data, including tasks, projects, habits, and goals.
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                disabled={loading}
+                className="w-full sm:w-auto"
+              >
+                {loading ? "Deleting..." : "Delete Account"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={onDeleteAccount}
+                  className="bg-red-500 hover:bg-red-600 focus:ring-red-500"
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <p className="text-sm text-red-500/80">
+            Deleting your account will remove all your data, including tasks,
+            projects, habits, and goals.
           </p>
         </div>
       </CardContent>

@@ -13,7 +13,7 @@ export default function Loading() {
           </div>
         </div>
       </div>
-      
+
       <div className="flex-1 overflow-hidden p-6">
         <KanbanSkeleton />
       </div>

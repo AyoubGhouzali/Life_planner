@@ -56,9 +56,9 @@ export function AddProject({ columnId }: AddProjectProps) {
               <Button size="sm" type="submit" disabled={isPending}>
                 {isPending ? "Adding..." : "Add Project"}
               </Button>
-              <Button 
-                size="sm" 
-                variant="ghost" 
+              <Button
+                size="sm"
+                variant="ghost"
                 onClick={() => setIsEditing(false)}
                 disabled={isPending}
               >

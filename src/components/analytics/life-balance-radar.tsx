@@ -36,7 +36,9 @@ export function LifeBalanceRadar({ data }: LifeBalanceRadarProps) {
           <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
             <Target className="h-10 w-10 mb-2 opacity-50" />
             <p className="text-sm">No activity data for this period.</p>
-            <p className="text-xs mt-1">Complete tasks, log habits, or track time to see your balance.</p>
+            <p className="text-xs mt-1">
+              Complete tasks, log habits, or track time to see your balance.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -55,7 +57,11 @@ export function LifeBalanceRadar({ data }: LifeBalanceRadarProps) {
               <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
                 <PolarGrid />
                 <PolarAngleAxis dataKey="name" fontSize={12} />
-                <PolarRadiusAxis angle={30} domain={[0, 'auto']} fontSize={10} />
+                <PolarRadiusAxis
+                  angle={30}
+                  domain={[0, "auto"]}
+                  fontSize={10}
+                />
                 <Radar
                   name="Score"
                   dataKey="score"

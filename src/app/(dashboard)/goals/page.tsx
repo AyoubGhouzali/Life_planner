@@ -6,7 +6,9 @@ import { CreateGoalDialog } from "@/components/goals/create-goal-dialog";
 
 export default async function GoalsPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -28,7 +30,9 @@ export default async function GoalsPage() {
 
       {goals.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed rounded-lg">
-          <p className="text-muted-foreground mb-4">You haven't set any goals yet.</p>
+          <p className="text-muted-foreground mb-4">
+            You haven't set any goals yet.
+          </p>
           <CreateGoalDialog />
         </div>
       ) : (

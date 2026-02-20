@@ -25,18 +25,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { 
-  Briefcase, 
-  Home, 
-  Dumbbell, 
-  PiggyBank, 
-  GraduationCap, 
-  Heart, 
-  Users, 
-  Plane, 
-  Music, 
+import {
+  Briefcase,
+  Home,
+  Dumbbell,
+  PiggyBank,
+  GraduationCap,
+  Heart,
+  Users,
+  Plane,
+  Music,
   Code,
-  Circle
+  Circle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -55,9 +55,24 @@ const ICONS = [
 ];
 
 const COLORS = [
-  "#ef4444", "#f97316", "#f59e0b", "#eab308", "#84cc16", "#22c55e",
-  "#10b981", "#14b8a6", "#06b6d4", "#0ea5e9", "#3b82f6", "#6366f1",
-  "#8b5cf6", "#a855f7", "#d946ef", "#ec4899", "#f43f5e", "#64748b",
+  "#ef4444",
+  "#f97316",
+  "#f59e0b",
+  "#eab308",
+  "#84cc16",
+  "#22c55e",
+  "#10b981",
+  "#14b8a6",
+  "#06b6d4",
+  "#0ea5e9",
+  "#3b82f6",
+  "#6366f1",
+  "#8b5cf6",
+  "#a855f7",
+  "#d946ef",
+  "#ec4899",
+  "#f43f5e",
+  "#64748b",
 ];
 
 interface EditAreaDialogProps {
@@ -66,7 +81,11 @@ interface EditAreaDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function EditAreaDialog({ area, open, onOpenChange }: EditAreaDialogProps) {
+export function EditAreaDialog({
+  area,
+  open,
+  onOpenChange,
+}: EditAreaDialogProps) {
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm<AreaInput>({
@@ -127,7 +146,10 @@ export function EditAreaDialog({ area, open, onOpenChange }: EditAreaDialogProps
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Work, Health, Finance" {...field} />
+                    <Input
+                      placeholder="e.g. Work, Health, Finance"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -167,7 +189,8 @@ export function EditAreaDialog({ area, open, onOpenChange }: EditAreaDialogProps
                           size="icon"
                           className={cn(
                             "h-9 w-9",
-                            field.value === item.name && "border-2 border-primary"
+                            field.value === item.name &&
+                              "border-2 border-primary",
                           )}
                           onClick={() => field.onChange(item.name)}
                         >
@@ -193,7 +216,8 @@ export function EditAreaDialog({ area, open, onOpenChange }: EditAreaDialogProps
                         type="button"
                         className={cn(
                           "h-6 w-6 rounded-full border border-black/10 transition-transform hover:scale-110",
-                          field.value === color && "ring-2 ring-primary ring-offset-2"
+                          field.value === color &&
+                            "ring-2 ring-primary ring-offset-2",
                         )}
                         style={{ backgroundColor: color }}
                         onClick={() => field.onChange(color)}

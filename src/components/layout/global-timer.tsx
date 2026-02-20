@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import { formatDuration, intervalToDuration } from "date-fns";
 
 export function GlobalTimer() {
-  const { runningTimerId, startTime, projectTitle, clearTimer } = useTimerStore();
+  const { runningTimerId, startTime, projectTitle, clearTimer } =
+    useTimerStore();
   const [elapsed, setElapsed] = useState("00:00:00");
 
   useEffect(() => {
@@ -18,9 +19,12 @@ export function GlobalTimer() {
     const interval = setInterval(() => {
       const now = new Date();
       const duration = intervalToDuration({ start: startTime, end: now });
-      
-      const pad = (n: number | undefined) => (n || 0).toString().padStart(2, "0");
-      setElapsed(`${pad(duration.hours)}:${pad(duration.minutes)}:${pad(duration.seconds)}`);
+
+      const pad = (n: number | undefined) =>
+        (n || 0).toString().padStart(2, "0");
+      setElapsed(
+        `${pad(duration.hours)}:${pad(duration.minutes)}:${pad(duration.seconds)}`,
+      );
     }, 1000);
 
     return () => clearInterval(interval);

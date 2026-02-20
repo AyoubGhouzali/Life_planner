@@ -61,7 +61,8 @@ export function RecentActivity({ items }: RecentActivityProps) {
                     <span className="font-semibold">"{item.title}"</span>
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    in {item.parentTitle} • {formatDistanceToNow(item.updatedAt, { addSuffix: true })}
+                    in {item.parentTitle} •{" "}
+                    {formatDistanceToNow(item.updatedAt, { addSuffix: true })}
                   </p>
                 </div>
               </div>

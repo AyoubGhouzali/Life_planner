@@ -22,10 +22,16 @@ export function StreakOverview({ data }: StreakOverviewProps) {
                 <span className="text-sm font-medium">{habit.name}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">{habit.completionCount} completions</span>
+                <span className="text-sm text-muted-foreground">
+                  {habit.completionCount} completions
+                </span>
                 <Badge variant="secondary" className="flex items-center gap-1">
                   <Flame className="h-3 w-3 fill-orange-500 text-orange-500" />
-                  {habit.completionCount >= 20 ? "Strong" : habit.completionCount >= 10 ? "Good" : "Starting"}
+                  {habit.completionCount >= 20
+                    ? "Strong"
+                    : habit.completionCount >= 10
+                      ? "Good"
+                      : "Starting"}
                 </Badge>
               </div>
             </div>

@@ -1,7 +1,7 @@
 # Build Plan: LifePlanner — 6-Phase Development Checklist
 
 **Version:** 1.0  
-**Last Updated:** February 2026  
+**Last Updated:** February 2026
 
 ---
 
@@ -575,14 +575,14 @@ Foundation   Kanban &     Dashboard    Habits,      Analytics    Polish,
 
 ## Phase Summary
 
-| Phase | Focus | Key Deliverables | Duration |
-|-------|-------|-----------------|----------|
-| **1** | Foundation & Auth | Next.js setup, Supabase DB, auth flow, app shell | Weeks 1–3 |
-| **2** | Kanban & Tasks | Life areas CRUD, Kanban board with DnD, projects, tasks | Weeks 4–8 |
-| **3** | Dashboard & Notes | Home dashboard, filters, notes system, global search | Weeks 9–12 |
-| **4** | Habits, Goals & Time | Habit tracking, goal management, time tracking | Weeks 13–16 |
-| **5** | Analytics & Reporting | Charts, trends, life balance radar, weekly review | Weeks 17–20 |
-| **6** | Polish & Deploy | Settings, notifications, performance, deployment | Weeks 21–24 |
+| Phase | Focus                 | Key Deliverables                                        | Duration    |
+| ----- | --------------------- | ------------------------------------------------------- | ----------- |
+| **1** | Foundation & Auth     | Next.js setup, Supabase DB, auth flow, app shell        | Weeks 1–3   |
+| **2** | Kanban & Tasks        | Life areas CRUD, Kanban board with DnD, projects, tasks | Weeks 4–8   |
+| **3** | Dashboard & Notes     | Home dashboard, filters, notes system, global search    | Weeks 9–12  |
+| **4** | Habits, Goals & Time  | Habit tracking, goal management, time tracking          | Weeks 13–16 |
+| **5** | Analytics & Reporting | Charts, trends, life balance radar, weekly review       | Weeks 17–20 |
+| **6** | Polish & Deploy       | Settings, notifications, performance, deployment        | Weeks 21–24 |
 
 ---
 

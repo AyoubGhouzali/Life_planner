@@ -55,6 +55,7 @@ LifePlanner is a **premium personal productivity platform** that helps users org
 ### The Problem
 
 People juggle multiple areas of life simultaneously but lack a single tool that:
+
 - Organizes projects and tasks across different life domains
 - Provides visual project management (Kanban) per life area
 - Tracks habits and goals alongside tasks
@@ -65,12 +66,12 @@ Existing tools (Notion, Trello, Todoist) solve parts of this problem but none of
 
 ### Target Users
 
-| Segment | Description |
-|---------|-------------|
-| **Students** | Managing coursework, extracurriculars, fitness, and personal projects |
-| **Professionals** | Balancing work projects, career development, health, and personal life |
-| **Freelancers** | Tracking multiple client projects alongside personal goals |
-| **Self-improvement enthusiasts** | People actively working on habits, goals, and life optimization |
+| Segment                          | Description                                                            |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| **Students**                     | Managing coursework, extracurriculars, fitness, and personal projects  |
+| **Professionals**                | Balancing work projects, career development, health, and personal life |
+| **Freelancers**                  | Tracking multiple client projects alongside personal goals             |
+| **Self-improvement enthusiasts** | People actively working on habits, goals, and life optimization        |
 
 ### Core Value Proposition
 
@@ -104,18 +105,18 @@ Existing tools (Notion, Trello, Todoist) solve parts of this problem but none of
 
 ### Tech Stack Summary
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Framework | Next.js 15 (App Router) | Server components, routing, API |
-| Language | TypeScript | Type safety across the stack |
-| Styling | Tailwind CSS v4 | Utility-first responsive design |
-| UI Components | shadcn/ui | Accessible, customizable primitives |
-| Database | Supabase (PostgreSQL) | Managed database + auth + realtime |
-| ORM | Drizzle ORM | Type-safe database queries |
-| State Management | Zustand + TanStack Query v5 | Client state + server cache |
-| Drag & Drop | @dnd-kit | Kanban board interactions |
-| Auth | Supabase Auth | Email/password + OAuth |
-| Deployment | AWS Amplify | Hosting + CI/CD |
+| Layer            | Technology                  | Purpose                             |
+| ---------------- | --------------------------- | ----------------------------------- |
+| Framework        | Next.js 15 (App Router)     | Server components, routing, API     |
+| Language         | TypeScript                  | Type safety across the stack        |
+| Styling          | Tailwind CSS v4             | Utility-first responsive design     |
+| UI Components    | shadcn/ui                   | Accessible, customizable primitives |
+| Database         | Supabase (PostgreSQL)       | Managed database + auth + realtime  |
+| ORM              | Drizzle ORM                 | Type-safe database queries          |
+| State Management | Zustand + TanStack Query v5 | Client state + server cache         |
+| Drag & Drop      | @dnd-kit                    | Kanban board interactions           |
+| Auth             | Supabase Auth               | Email/password + OAuth              |
+| Deployment       | AWS Amplify                 | Hosting + CI/CD                     |
 
 ### Database Entity Overview
 

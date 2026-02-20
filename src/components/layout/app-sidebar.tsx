@@ -82,7 +82,7 @@ export function AppSidebar({ areas }: AppSidebarProps) {
               <ChevronsLeft
                 className={cn(
                   "ml-auto h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200",
-                  state === "collapsed" && "rotate-180"
+                  state === "collapsed" && "rotate-180",
                 )}
                 onClick={(e) => {
                   e.stopPropagation();

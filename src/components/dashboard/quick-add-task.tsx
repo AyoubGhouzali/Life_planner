@@ -49,8 +49,8 @@ export function QuickAddTask({ areas, onSuccess }: QuickAddTaskProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !projectId) {
-        toast.error("Title and Project are required");
-        return;
+      toast.error("Title and Project are required");
+      return;
     }
 
     setLoading(true);
@@ -65,7 +65,7 @@ export function QuickAddTask({ areas, onSuccess }: QuickAddTaskProps) {
       toast.success("Task created");
       setTitle("");
       // Keep project selected for subsequent adds? Yes.
-      
+
       if (onSuccess) {
         onSuccess();
       }
@@ -91,22 +91,30 @@ export function QuickAddTask({ areas, onSuccess }: QuickAddTaskProps) {
           <SelectValue placeholder="Select Project" />
         </SelectTrigger>
         <SelectContent>
-            {areas.map(area => {
-                const projects = area.boards.flatMap(b => b.columns.flatMap(c => c.projects));
-                if (projects.length === 0) return null;
-                
-                return (
-                 <SelectGroup key={area.id}>
-                    <SelectLabel>{area.name}</SelectLabel>
-                    {projects.map(p => (
-                        <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
-                    ))}
-                 </SelectGroup>
-                )
-            })}
+          {areas.map((area) => {
+            const projects = area.boards.flatMap((b) =>
+              b.columns.flatMap((c) => c.projects),
+            );
+            if (projects.length === 0) return null;
+
+            return (
+              <SelectGroup key={area.id}>
+                <SelectLabel>{area.name}</SelectLabel>
+                {projects.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.title}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            );
+          })}
         </SelectContent>
       </Select>
-      <Button type="submit" size="icon" disabled={loading || !title || !projectId}>
+      <Button
+        type="submit"
+        size="icon"
+        disabled={loading || !title || !projectId}
+      >
         <Plus className="h-4 w-4" />
       </Button>
     </form>

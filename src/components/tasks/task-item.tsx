@@ -4,7 +4,14 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, GripVertical, Trash2, ChevronRight, ChevronDown, Plus } from "lucide-react";
+import {
+  MoreHorizontal,
+  GripVertical,
+  Trash2,
+  ChevronRight,
+  ChevronDown,
+  Plus,
+} from "lucide-react";
 import { toggleTask, deleteTask, createTask } from "@/actions/task-actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -92,7 +99,7 @@ export function TaskItem({ task, isSubtask }: TaskItemProps) {
         className={cn(
           "flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 group",
           isDragging && "opacity-50 bg-muted",
-          isSubtask && "ml-6"
+          isSubtask && "ml-6",
         )}
       >
         <button
@@ -104,7 +111,7 @@ export function TaskItem({ task, isSubtask }: TaskItemProps) {
         </button>
 
         {!isSubtask && task.subtasks?.length > 0 && (
-          <button 
+          <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-muted-foreground hover:text-foreground"
           >
@@ -115,21 +122,21 @@ export function TaskItem({ task, isSubtask }: TaskItemProps) {
             )}
           </button>
         )}
-        
-        {!isSubtask && task.subtasks?.length === 0 && (
-          <div className="w-4" />
-        )}
-        
-        <Checkbox 
-          checked={task.status === "done"} 
+
+        {!isSubtask && task.subtasks?.length === 0 && <div className="w-4" />}
+
+        <Checkbox
+          checked={task.status === "done"}
           onCheckedChange={handleToggle}
           disabled={isPending}
         />
-        
-        <span className={cn(
-          "flex-1 text-sm transition-all",
-          task.status === "done" && "line-through text-muted-foreground"
-        )}>
+
+        <span
+          className={cn(
+            "flex-1 text-sm transition-all",
+            task.status === "done" && "line-through text-muted-foreground",
+          )}
+        >
           {task.title}
         </span>
 
@@ -145,9 +152,9 @@ export function TaskItem({ task, isSubtask }: TaskItemProps) {
               <Plus className="h-4 w-4" />
             </Button>
           )}
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="h-8 w-8"
             onClick={handleDelete}
             disabled={isPending}

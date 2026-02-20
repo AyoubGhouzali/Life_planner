@@ -6,7 +6,7 @@ export async function getTasksByProject(projectId: string) {
   return await db.query.tasks.findMany({
     where: and(
       eq(tasks.project_id, projectId),
-      isNull(tasks.parent_task_id) // Only top-level tasks
+      isNull(tasks.parent_task_id), // Only top-level tasks
     ),
     orderBy: [asc(tasks.position)],
     with: {

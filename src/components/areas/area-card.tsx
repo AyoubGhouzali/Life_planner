@@ -1,12 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -86,7 +81,7 @@ export function AreaCard({ area, projectCount }: AreaCardProps) {
                 {area.is_archived ? "Unarchive" : "Archive"}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 className="text-destructive focus:text-destructive"
                 onClick={() => setIsDeleteDialogOpen(true)}
               >
@@ -96,12 +91,10 @@ export function AreaCard({ area, projectCount }: AreaCardProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        
+
         <Link href={`/areas/${area.id}`}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {area.name}
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">{area.name}</CardTitle>
             <Icon className="h-4 w-4" style={{ color: area.color }} />
           </CardHeader>
           <CardContent>
@@ -113,13 +106,16 @@ export function AreaCard({ area, projectCount }: AreaCardProps) {
         </Link>
       </Card>
 
-      <EditAreaDialog 
-        area={area} 
-        open={isEditDialogOpen} 
-        onOpenChange={setIsEditDialogOpen} 
+      <EditAreaDialog
+        area={area}
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
       />
 
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -130,7 +126,7 @@ export function AreaCard({ area, projectCount }: AreaCardProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault();
                 handleDelete();

@@ -21,19 +21,20 @@ import { OverdueBreakdown } from "@/components/analytics/overdue-breakdown";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PeriodSelector } from "@/components/analytics/period-selector";
-import {
-  CheckCircle2,
-  TrendingUp,
-  AlertTriangle,
-  Flame,
-} from "lucide-react";
+import { CheckCircle2, TrendingUp, AlertTriangle, Flame } from "lucide-react";
 
-const VALID_PERIODS = new Set<AnalyticsPeriod>(["week", "month", "last30", "last90", "custom"]);
+const VALID_PERIODS = new Set<AnalyticsPeriod>([
+  "week",
+  "month",
+  "last30",
+  "last90",
+  "custom",
+]);
 
 function getDateRange(
   period: AnalyticsPeriod,
   customFrom?: string,
-  customTo?: string
+  customTo?: string,
 ): { from: Date; to: Date } {
   const now = new Date();
   const from = new Date();
@@ -69,7 +70,9 @@ export default async function AnalyticsPage({
   searchParams: Promise<{ period?: string; from?: string; to?: string }>;
 }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -77,7 +80,9 @@ export default async function AnalyticsPage({
 
   const params = await searchParams;
   const rawPeriod = params.period ?? "last30";
-  const analyticsPeriod: AnalyticsPeriod = VALID_PERIODS.has(rawPeriod as AnalyticsPeriod)
+  const analyticsPeriod: AnalyticsPeriod = VALID_PERIODS.has(
+    rawPeriod as AnalyticsPeriod,
+  )
     ? (rawPeriod as AnalyticsPeriod)
     : "last30";
   const customFrom = params.from;
@@ -179,24 +184,44 @@ interface WrapperProps {
 }
 
 // --- Summary Stats ---
-async function SummaryStats({ userId, period, customFrom, customTo }: WrapperProps) {
+async function SummaryStats({
+  userId,
+  period,
+  customFrom,
+  customTo,
+}: WrapperProps) {
   const dateRange = getDateRange(period, customFrom, customTo);
   const [completions, trends, streaks, overdue] = await Promise.all([
-    getCompletionOverTime(userId, period, period === "custom" ? dateRange : undefined),
+    getCompletionOverTime(
+      userId,
+      period,
+      period === "custom" ? dateRange : undefined,
+    ),
     getProductivityTrends(userId),
     getStreakSummary(userId),
     getOverdueAnalysis(userId),
   ]);
 
   const totalCompleted = completions.reduce((acc, curr) => acc + curr.count, 0);
-  const avgDaily = completions.length > 0 ? (totalCompleted / completions.length).toFixed(1) : "0";
+  const avgDaily =
+    completions.length > 0
+      ? (totalCompleted / completions.length).toFixed(1)
+      : "0";
 
-  const percentChange = trends.lastWeek > 0
-    ? Math.round(((trends.thisWeek - trends.lastWeek) / trends.lastWeek) * 100)
-    : trends.thisWeek > 0 ? 100 : 0;
+  const percentChange =
+    trends.lastWeek > 0
+      ? Math.round(
+          ((trends.thisWeek - trends.lastWeek) / trends.lastWeek) * 100,
+        )
+      : trends.thisWeek > 0
+        ? 100
+        : 0;
 
   const activeStreaks = streaks.filter((h) => h.completionCount > 0).length;
-  const totalOverdue = overdue.reduce((acc, curr) => acc + curr.overdueCount, 0);
+  const totalOverdue = overdue.reduce(
+    (acc, curr) => acc + curr.overdueCount,
+    0,
+  );
 
   return (
     <>
@@ -220,7 +245,12 @@ async function SummaryStats({ userId, period, customFrom, customTo }: WrapperPro
         <CardContent>
           <div className="text-2xl font-bold">{avgDaily}</div>
           <p className="text-xs text-muted-foreground">
-            {percentChange > 0 ? `+${percentChange}%` : percentChange < 0 ? `${percentChange}%` : "No change"} vs last week
+            {percentChange > 0
+              ? `+${percentChange}%`
+              : percentChange < 0
+                ? `${percentChange}%`
+                : "No change"}{" "}
+            vs last week
           </p>
         </CardContent>
       </Card>
@@ -244,7 +274,9 @@ async function SummaryStats({ userId, period, customFrom, customTo }: WrapperPro
         <CardContent>
           <div className="text-2xl font-bold">{totalOverdue}</div>
           <p className="text-xs text-muted-foreground">
-            {totalOverdue === 0 ? "You're all caught up!" : "Tasks past their due date"}
+            {totalOverdue === 0
+              ? "You're all caught up!"
+              : "Tasks past their due date"}
           </p>
         </CardContent>
       </Card>
@@ -253,13 +285,27 @@ async function SummaryStats({ userId, period, customFrom, customTo }: WrapperPro
 }
 
 // --- Chart Wrappers ---
-async function CompletionChartWrapper({ userId, period, customFrom, customTo }: WrapperProps) {
+async function CompletionChartWrapper({
+  userId,
+  period,
+  customFrom,
+  customTo,
+}: WrapperProps) {
   const dateRange = getDateRange(period, customFrom, customTo);
-  const data = await getCompletionOverTime(userId, period, period === "custom" ? dateRange : undefined);
+  const data = await getCompletionOverTime(
+    userId,
+    period,
+    period === "custom" ? dateRange : undefined,
+  );
   return <CompletionChart data={data} />;
 }
 
-async function AreaDistributionWrapper({ userId, period, customFrom, customTo }: WrapperProps) {
+async function AreaDistributionWrapper({
+  userId,
+  period,
+  customFrom,
+  customTo,
+}: WrapperProps) {
   const dateRange = getDateRange(period, customFrom, customTo);
   const data = await getAreaDistribution(userId, dateRange);
   return <AreaDistribution data={data} />;
@@ -275,13 +321,23 @@ async function OverdueBreakdownWrapper({ userId }: { userId: string }) {
   return <OverdueBreakdown data={data} />;
 }
 
-async function LifeBalanceRadarWrapper({ userId, period, customFrom, customTo }: WrapperProps) {
+async function LifeBalanceRadarWrapper({
+  userId,
+  period,
+  customFrom,
+  customTo,
+}: WrapperProps) {
   const dateRange = getDateRange(period, customFrom, customTo);
   const data = await getLifeBalanceScores(userId, dateRange);
   return <LifeBalanceRadar data={data} />;
 }
 
-async function TimeDistributionWrapper({ userId, period, customFrom, customTo }: WrapperProps) {
+async function TimeDistributionWrapper({
+  userId,
+  period,
+  customFrom,
+  customTo,
+}: WrapperProps) {
   const dateRange = getDateRange(period, customFrom, customTo);
   const data = await getTimeDistribution(userId, dateRange);
   return <TimeDistribution data={data} />;
@@ -296,10 +352,38 @@ async function StreakOverviewWrapper({ userId }: { userId: string }) {
 function StatsSkeleton() {
   return (
     <>
-      <Card><CardHeader className="h-20"><Skeleton className="h-4 w-24" /></CardHeader><CardContent><Skeleton className="h-8 w-16" /></CardContent></Card>
-      <Card><CardHeader className="h-20"><Skeleton className="h-4 w-24" /></CardHeader><CardContent><Skeleton className="h-8 w-16" /></CardContent></Card>
-      <Card><CardHeader className="h-20"><Skeleton className="h-4 w-24" /></CardHeader><CardContent><Skeleton className="h-8 w-16" /></CardContent></Card>
-      <Card><CardHeader className="h-20"><Skeleton className="h-4 w-24" /></CardHeader><CardContent><Skeleton className="h-8 w-16" /></CardContent></Card>
+      <Card>
+        <CardHeader className="h-20">
+          <Skeleton className="h-4 w-24" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-8 w-16" />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="h-20">
+          <Skeleton className="h-4 w-24" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-8 w-16" />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="h-20">
+          <Skeleton className="h-4 w-24" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-8 w-16" />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="h-20">
+          <Skeleton className="h-4 w-24" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-8 w-16" />
+        </CardContent>
+      </Card>
     </>
   );
 }

@@ -7,7 +7,7 @@ export async function getNotifications(userId: string) {
     const unread = await db.query.notifications.findMany({
       where: and(
         eq(notifications.user_id, userId),
-        isNull(notifications.read_at)
+        isNull(notifications.read_at),
       ),
       orderBy: desc(notifications.created_at),
     });
@@ -15,7 +15,7 @@ export async function getNotifications(userId: string) {
     const recentRead = await db.query.notifications.findMany({
       where: and(
         eq(notifications.user_id, userId),
-        isNotNull(notifications.read_at)
+        isNotNull(notifications.read_at),
       ),
       orderBy: desc(notifications.created_at),
       limit: 5,

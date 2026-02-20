@@ -28,16 +28,16 @@ const priorityColors = {
 
 export function ProjectCard({ project, isOverlay }: ProjectCardProps) {
   const [showDetail, setShowDetail] = useState(false);
-  const setTimer = useTimerStore(state => state.setTimer);
-  
+  const setTimer = useTimerStore((state) => state.setTimer);
+
   const handleStartTimer = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-        const timer = await startTimer(project.id);
-        setTimer(timer.id, new Date(timer.start_time), project.title);
-        toast.success("Timer started");
+      const timer = await startTimer(project.id);
+      setTimer(timer.id, new Date(timer.start_time), project.title);
+      toast.success("Timer started");
     } catch (error) {
-        toast.error("Failed to start timer");
+      toast.error("Failed to start timer");
     }
   };
 
@@ -72,11 +72,15 @@ export function ProjectCard({ project, isOverlay }: ProjectCardProps) {
     );
   }
 
-  const completedTasks = project.tasks?.filter((t: any) => t.status === "done").length || 0;
+  const completedTasks =
+    project.tasks?.filter((t: any) => t.status === "done").length || 0;
   const totalTasks = project.tasks?.length || 0;
   const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-  
-  const isOverdue = project.due_date && new Date(project.due_date) < new Date() && project.column?.name !== "Done";
+
+  const isOverdue =
+    project.due_date &&
+    new Date(project.due_date) < new Date() &&
+    project.column?.name !== "Done";
 
   return (
     <>
@@ -88,34 +92,42 @@ export function ProjectCard({ project, isOverlay }: ProjectCardProps) {
         onClick={() => !isOverlay && setShowDetail(true)}
         className={cn(
           "group cursor-grab active:cursor-grabbing hover:border-primary/50 transition-all shadow-sm",
-          isOverlay && "cursor-grabbing shadow-xl ring-2 ring-primary border-primary",
-          isOverdue && "border-destructive/50"
+          isOverlay &&
+            "cursor-grabbing shadow-xl ring-2 ring-primary border-primary",
+          isOverdue && "border-destructive/50",
         )}
       >
         <CardContent className="p-3 space-y-3">
           {/* Priority & Tags */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-                <Badge 
-                variant="outline" 
-                className={cn("text-[10px] uppercase font-bold py-0 h-5", priorityColors[project.priority as keyof typeof priorityColors])}
-                >
+              <Badge
+                variant="outline"
+                className={cn(
+                  "text-[10px] uppercase font-bold py-0 h-5",
+                  priorityColors[
+                    project.priority as keyof typeof priorityColors
+                  ],
+                )}
+              >
                 {project.priority}
-                </Badge>
-                <Button 
-                    size="icon" 
-                    variant="ghost" 
-                    className="h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 hover:bg-primary hover:text-primary-foreground"
-                    onClick={handleStartTimer}
-                >
-                    <Play className="h-3 w-3 fill-current" />
-                </Button>
+              </Badge>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-6 w-6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 hover:bg-primary hover:text-primary-foreground"
+                onClick={handleStartTimer}
+              >
+                <Play className="h-3 w-3 fill-current" />
+              </Button>
             </div>
             {project.due_date && (
-              <div className={cn(
-                "flex items-center text-[10px] font-medium",
-                isOverdue ? "text-destructive" : "text-muted-foreground"
-              )}>
+              <div
+                className={cn(
+                  "flex items-center text-[10px] font-medium",
+                  isOverdue ? "text-destructive" : "text-muted-foreground",
+                )}
+              >
                 <Clock className="h-3 w-3 mr-1" />
                 {format(new Date(project.due_date), "MMM d")}
               </div>
@@ -138,8 +150,8 @@ export function ProjectCard({ project, isOverlay }: ProjectCardProps) {
                 <span>{Math.round(progress)}%</span>
               </div>
               <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-primary transition-all duration-500" 
+                <div
+                  className="h-full bg-primary transition-all duration-500"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -148,10 +160,10 @@ export function ProjectCard({ project, isOverlay }: ProjectCardProps) {
         </CardContent>
       </Card>
 
-      <ProjectDetail 
-        project={project} 
-        open={showDetail} 
-        onOpenChange={setShowDetail} 
+      <ProjectDetail
+        project={project}
+        open={showDetail}
+        onOpenChange={setShowDetail}
       />
     </>
   );

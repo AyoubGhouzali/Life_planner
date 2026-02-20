@@ -53,7 +53,11 @@ export function DashboardFilters({ areas }: DashboardFiltersProps) {
       <div className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-8 border-dashed bg-background">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 border-dashed bg-background"
+            >
               <Filter className="mr-2 h-4 w-4" />
               Filters
               {activeFilterCount > 0 && (
@@ -76,19 +80,28 @@ export function DashboardFilters({ areas }: DashboardFiltersProps) {
                     ) : (
                       <>
                         {areaId && (
-                            <Badge variant="secondary" className="rounded-sm px-1 font-normal">
-                                Area
-                            </Badge>
+                          <Badge
+                            variant="secondary"
+                            className="rounded-sm px-1 font-normal"
+                          >
+                            Area
+                          </Badge>
                         )}
-                         {status.length > 0 && (
-                            <Badge variant="secondary" className="rounded-sm px-1 font-normal">
-                                Status
-                            </Badge>
+                        {status.length > 0 && (
+                          <Badge
+                            variant="secondary"
+                            className="rounded-sm px-1 font-normal"
+                          >
+                            Status
+                          </Badge>
                         )}
                         {priority.length > 0 && (
-                            <Badge variant="secondary" className="rounded-sm px-1 font-normal">
-                                Priority
-                            </Badge>
+                          <Badge
+                            variant="secondary"
+                            className="rounded-sm px-1 font-normal"
+                          >
+                            Priority
+                          </Badge>
                         )}
                       </>
                     )}
@@ -101,16 +114,18 @@ export function DashboardFilters({ areas }: DashboardFiltersProps) {
             <DropdownMenuLabel>Life Area</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuCheckboxItem
-                checked={areaId === null}
-                onCheckedChange={() => setAreaId(null)}
+              checked={areaId === null}
+              onCheckedChange={() => setAreaId(null)}
             >
-                All Areas
+              All Areas
             </DropdownMenuCheckboxItem>
             {areas.map((area) => (
               <DropdownMenuCheckboxItem
                 key={area.id}
                 checked={areaId === area.id}
-                onCheckedChange={() => setAreaId(areaId === area.id ? null : area.id)}
+                onCheckedChange={() =>
+                  setAreaId(areaId === area.id ? null : area.id)
+                }
               >
                 {area.name}
               </DropdownMenuCheckboxItem>
@@ -123,14 +138,14 @@ export function DashboardFilters({ areas }: DashboardFiltersProps) {
                 key={p}
                 checked={priority.includes(p)}
                 onCheckedChange={(checked) => {
-                    if (checked) setPriority([...priority, p]);
-                    else setPriority(priority.filter((x) => x !== p));
+                  if (checked) setPriority([...priority, p]);
+                  else setPriority(priority.filter((x) => x !== p));
                 }}
               >
                 {p.charAt(0).toUpperCase() + p.slice(1)}
               </DropdownMenuCheckboxItem>
             ))}
-             <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
             <DropdownMenuLabel>Status</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {["todo", "in_progress", "done"].map((s) => (
@@ -138,11 +153,12 @@ export function DashboardFilters({ areas }: DashboardFiltersProps) {
                 key={s}
                 checked={status.includes(s)}
                 onCheckedChange={(checked) => {
-                    if (checked) setStatus([...status, s]);
-                    else setStatus(status.filter((x) => x !== s));
+                  if (checked) setStatus([...status, s]);
+                  else setStatus(status.filter((x) => x !== s));
                 }}
               >
-                {s.replace("_", " ").charAt(0).toUpperCase() + s.replace("_", " ").slice(1)}
+                {s.replace("_", " ").charAt(0).toUpperCase() +
+                  s.replace("_", " ").slice(1)}
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuContent>

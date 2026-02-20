@@ -18,7 +18,9 @@ import { Layers } from "lucide-react";
 
 export default async function AreasPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -77,9 +79,9 @@ export default async function AreasPage() {
               acc +
               board.columns.reduce(
                 (cAcc, column) => cAcc + column.projects.length,
-                0
+                0,
               ),
-            0
+            0,
           );
 
           return (

@@ -37,7 +37,9 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
           <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
             <BarChart3 className="h-10 w-10 mb-2 opacity-50" />
             <p className="text-sm">No completed tasks in this period.</p>
-            <p className="text-xs mt-1">Complete some tasks to see your progress.</p>
+            <p className="text-xs mt-1">
+              Complete some tasks to see your progress.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -61,7 +63,12 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    tickFormatter={(value) =>
+                      new Date(value).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    }
                   />
                   <YAxis
                     fontSize={12}
@@ -80,7 +87,9 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
                                   Date
                                 </span>
                                 <span className="font-bold text-muted-foreground">
-                                  {new Date(payload[0].payload.date).toLocaleDateString()}
+                                  {new Date(
+                                    payload[0].payload.date,
+                                  ).toLocaleDateString()}
                                 </span>
                               </div>
                               <div className="flex flex-col">
@@ -114,7 +123,12 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    tickFormatter={(value) =>
+                      new Date(value).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    }
                   />
                   <YAxis
                     fontSize={12}
@@ -133,7 +147,9 @@ export function CompletionChart({ data, type = "bar" }: CompletionChartProps) {
                                   Date
                                 </span>
                                 <span className="font-bold text-muted-foreground">
-                                  {new Date(payload[0].payload.date).toLocaleDateString()}
+                                  {new Date(
+                                    payload[0].payload.date,
+                                  ).toLocaleDateString()}
                                 </span>
                               </div>
                               <div className="flex flex-col">

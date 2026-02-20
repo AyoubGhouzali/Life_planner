@@ -9,16 +9,24 @@ import { revalidatePath } from "next/cache";
 
 export async function createProject(formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const title = formData.get("title") as string;
-  const description = formData.get("description") as string || null;
-  const priority = formData.get("priority") as "low" | "medium" | "high" | "urgent";
-  const dueDate = formData.get("dueDate") as string || null;
+  const description = (formData.get("description") as string) || null;
+  const priority = formData.get("priority") as
+    | "low"
+    | "medium"
+    | "high"
+    | "urgent";
+  const dueDate = (formData.get("dueDate") as string) || null;
   const columnId = formData.get("columnId") as string;
   const isProcess = formData.get("isProcess") === "true";
-  const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : [];
+  const tags = formData.get("tags")
+    ? JSON.parse(formData.get("tags") as string)
+    : [];
 
   const validated = projectSchema.parse({
     title,
@@ -30,21 +38,24 @@ export async function createProject(formData: FormData) {
     tags,
   });
 
-  const [newProject] = await db.insert(projects).values({
-    column_id: validated.columnId,
-    title: validated.title,
-    description: validated.description,
-    priority: validated.priority,
-    due_date: validated.dueDate ? new Date(validated.dueDate) : null,
-    is_process: validated.isProcess,
-    tags: validated.tags,
-  }).returning();
+  const [newProject] = await db
+    .insert(projects)
+    .values({
+      column_id: validated.columnId,
+      title: validated.title,
+      description: validated.description,
+      priority: validated.priority,
+      due_date: validated.dueDate ? new Date(validated.dueDate) : null,
+      is_process: validated.isProcess,
+      tags: validated.tags,
+    })
+    .returning();
 
   const column = await db.query.columns.findFirst({
     where: eq(columns.id, validated.columnId),
     with: {
-      board: true
-    }
+      board: true,
+    },
   });
 
   if (column?.board) {
@@ -56,16 +67,24 @@ export async function createProject(formData: FormData) {
 
 export async function updateProject(id: string, formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const title = formData.get("title") as string;
-  const description = formData.get("description") as string || null;
-  const priority = formData.get("priority") as "low" | "medium" | "high" | "urgent";
-  const dueDate = formData.get("dueDate") as string || null;
+  const description = (formData.get("description") as string) || null;
+  const priority = formData.get("priority") as
+    | "low"
+    | "medium"
+    | "high"
+    | "urgent";
+  const dueDate = (formData.get("dueDate") as string) || null;
   const columnId = formData.get("columnId") as string;
   const isProcess = formData.get("isProcess") === "true";
-  const tags = formData.get("tags") ? JSON.parse(formData.get("tags") as string) : [];
+  const tags = formData.get("tags")
+    ? JSON.parse(formData.get("tags") as string)
+    : [];
 
   const validated = projectSchema.parse({
     title,
@@ -87,7 +106,7 @@ export async function updateProject(id: string, formData: FormData) {
       due_date: validated.dueDate ? new Date(validated.dueDate) : null,
       is_process: validated.isProcess,
       tags: validated.tags,
-      updated_at: new Date()
+      updated_at: new Date(),
     })
     .where(eq(projects.id, id))
     .returning();
@@ -95,8 +114,8 @@ export async function updateProject(id: string, formData: FormData) {
   const column = await db.query.columns.findFirst({
     where: eq(columns.id, updatedProject.column_id),
     with: {
-      board: true
-    }
+      board: true,
+    },
   });
 
   if (column?.board) {
@@ -108,7 +127,9 @@ export async function updateProject(id: string, formData: FormData) {
 
 export async function deleteProject(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const [deletedProject] = await db
@@ -120,8 +141,8 @@ export async function deleteProject(id: string) {
     const column = await db.query.columns.findFirst({
       where: eq(columns.id, deletedProject.column_id),
       with: {
-        board: true
-      }
+        board: true,
+      },
     });
 
     if (column?.board) {
@@ -130,9 +151,15 @@ export async function deleteProject(id: string) {
   }
 }
 
-export async function moveProject(id: string, toColumnId: string, position: number) {
+export async function moveProject(
+  id: string,
+  toColumnId: string,
+  position: number,
+) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const [updatedProject] = await db
@@ -140,7 +167,7 @@ export async function moveProject(id: string, toColumnId: string, position: numb
     .set({
       column_id: toColumnId,
       position: position,
-      updated_at: new Date()
+      updated_at: new Date(),
     })
     .where(eq(projects.id, id))
     .returning();
@@ -148,8 +175,8 @@ export async function moveProject(id: string, toColumnId: string, position: numb
   const column = await db.query.columns.findFirst({
     where: eq(columns.id, toColumnId),
     with: {
-      board: true
-    }
+      board: true,
+    },
   });
 
   if (column?.board) {
@@ -161,7 +188,9 @@ export async function moveProject(id: string, toColumnId: string, position: numb
 
 export async function archiveProject(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const project = await db.query.projects.findFirst({
@@ -174,7 +203,7 @@ export async function archiveProject(id: string) {
     .update(projects)
     .set({
       is_archived: !project.is_archived,
-      updated_at: new Date()
+      updated_at: new Date(),
     })
     .where(eq(projects.id, id))
     .returning();
@@ -182,8 +211,8 @@ export async function archiveProject(id: string) {
   const column = await db.query.columns.findFirst({
     where: eq(columns.id, updatedProject.column_id),
     with: {
-      board: true
-    }
+      board: true,
+    },
   });
 
   if (column?.board) {

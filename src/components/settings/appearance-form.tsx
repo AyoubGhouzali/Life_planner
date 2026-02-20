@@ -28,15 +28,15 @@ export function SettingsAppearanceForm({ profile }: { profile: any }) {
 
   const onThemeChange = async (val: string) => {
     setTheme(val);
-    
+
     try {
-        await updateSettings(profile.id, {
-            ...profile.settings,
-            theme: val,
-        });
-        toast.success("Theme preference saved.");
+      await updateSettings(profile.id, {
+        ...profile.settings,
+        theme: val,
+      });
+      toast.success("Theme preference saved.");
     } catch (error) {
-        toast.error("Failed to save theme preference.");
+      toast.error("Failed to save theme preference.");
     }
   };
 
@@ -44,14 +44,16 @@ export function SettingsAppearanceForm({ profile }: { profile: any }) {
     <Card>
       <CardHeader>
         <CardTitle>Appearance</CardTitle>
-        <CardDescription>
-          Customize the appearance of the app.
-        </CardDescription>
+        <CardDescription>Customize the appearance of the app.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="space-y-1">
           <Label>Theme</Label>
-          <RadioGroup defaultValue={theme} onValueChange={onThemeChange} className="grid max-w-md grid-cols-3 gap-8 pt-2">
+          <RadioGroup
+            defaultValue={theme}
+            onValueChange={onThemeChange}
+            className="grid max-w-md grid-cols-3 gap-8 pt-2"
+          >
             <div>
               <Label className="[&:has([data-state=checked])>div]:border-primary cursor-pointer">
                 <RadioGroupItem value="light" className="sr-only" />
@@ -92,7 +94,7 @@ export function SettingsAppearanceForm({ profile }: { profile: any }) {
                 </span>
               </Label>
             </div>
-             <div>
+            <div>
               <Label className="[&:has([data-state=checked])>div]:border-primary cursor-pointer">
                 <RadioGroupItem value="system" className="sr-only" />
                 <div className="items-center rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground">
@@ -101,7 +103,7 @@ export function SettingsAppearanceForm({ profile }: { profile: any }) {
                       <div className="h-2 w-[40px] rounded-lg bg-slate-400" />
                       <div className="h-2 w-[60px] rounded-lg bg-slate-400" />
                     </div>
-                     <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm mt-2">
+                    <div className="flex items-center space-x-2 rounded-md bg-white p-2 shadow-sm mt-2">
                       <div className="h-4 w-4 rounded-full bg-[#ecedef]" />
                       <div className="h-2 w-[60px] rounded-lg bg-[#ecedef]" />
                     </div>

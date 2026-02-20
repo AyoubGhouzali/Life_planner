@@ -42,12 +42,12 @@ export function HabitCard({ habit }: HabitCardProps) {
       if (isCompleted) {
         await unlogHabit(habit.id);
         setIsCompleted(false);
-        setStreak(prev => Math.max(0, prev - 1));
+        setStreak((prev) => Math.max(0, prev - 1));
         toast.success("Habit log removed");
       } else {
         await logHabit(habit.id);
         setIsCompleted(true);
-        setStreak(prev => prev + 1);
+        setStreak((prev) => prev + 1);
         toast.success("Habit logged! Keep it up!");
       }
     } catch (error) {
@@ -88,7 +88,8 @@ export function HabitCard({ habit }: HabitCardProps) {
             variant={isCompleted ? "secondary" : "default"}
             className={cn(
               "h-8 px-3 transition-all",
-              isCompleted && "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400"
+              isCompleted &&
+                "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400",
             )}
             onClick={handleToggle}
             disabled={loading}

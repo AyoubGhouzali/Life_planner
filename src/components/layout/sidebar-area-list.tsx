@@ -73,11 +73,7 @@ function SortableAreaItem({
       style={style}
       className={cn(isDragging && "opacity-50")}
     >
-      <SidebarMenuButton
-        asChild
-        isActive={isActive}
-        tooltip={area.name}
-      >
+      <SidebarMenuButton asChild isActive={isActive} tooltip={area.name}>
         <Link href={`/areas/${area.id}`}>
           <IconComponent
             className="h-4 w-4 shrink-0"
@@ -120,7 +116,7 @@ export function SidebarAreaList({ areas: initialAreas }: SidebarAreaListProps) {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   async function handleDragEnd(event: DragEndEvent) {
@@ -146,8 +142,7 @@ export function SidebarAreaList({ areas: initialAreas }: SidebarAreaListProps) {
     return (
       <SidebarMenu>
         {areas.map((area) => {
-          const IconComponent =
-            (Icons as any)[area.icon || "Circle"] || Circle;
+          const IconComponent = (Icons as any)[area.icon || "Circle"] || Circle;
           const isActive = pathname === `/areas/${area.id}`;
           return (
             <SidebarMenuItem key={area.id}>

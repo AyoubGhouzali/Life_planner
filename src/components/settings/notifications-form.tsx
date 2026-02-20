@@ -33,12 +33,12 @@ const notificationsFormSchema = z.object({
 type NotificationsFormValues = z.infer<typeof notificationsFormSchema>;
 
 export function SettingsNotificationsForm({ profile }: { profile: any }) {
-    const defaultValues: Partial<NotificationsFormValues> = {
-        due_reminders: profile.settings?.notifications?.due_reminders ?? true,
-        weekly_review: profile.settings?.notifications?.weekly_review ?? true,
-        overdue_alerts: profile.settings?.notifications?.overdue_alerts ?? true,
-    }
-  
+  const defaultValues: Partial<NotificationsFormValues> = {
+    due_reminders: profile.settings?.notifications?.due_reminders ?? true,
+    weekly_review: profile.settings?.notifications?.weekly_review ?? true,
+    overdue_alerts: profile.settings?.notifications?.overdue_alerts ?? true,
+  };
+
   const form = useForm<NotificationsFormValues>({
     resolver: zodResolver(notificationsFormSchema),
     defaultValues,
@@ -46,13 +46,13 @@ export function SettingsNotificationsForm({ profile }: { profile: any }) {
 
   async function onSubmit(data: NotificationsFormValues) {
     try {
-        await updateSettings(profile.id, {
-            ...profile.settings,
-            notifications: data,
-        });
-        toast.success("Notification preferences updated.");
+      await updateSettings(profile.id, {
+        ...profile.settings,
+        notifications: data,
+      });
+      toast.success("Notification preferences updated.");
     } catch (error) {
-        toast.error("Failed to update notification preferences.");
+      toast.error("Failed to update notification preferences.");
     }
   }
 
@@ -107,7 +107,7 @@ export function SettingsNotificationsForm({ profile }: { profile: any }) {
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="overdue_alerts"
               render={({ field }) => (

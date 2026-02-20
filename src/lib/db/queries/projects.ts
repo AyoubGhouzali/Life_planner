@@ -6,7 +6,7 @@ export async function getProjectsByColumn(columnId: string) {
   return await db.query.projects.findMany({
     where: and(
       eq(projects.column_id, columnId),
-      eq(projects.is_archived, false)
+      eq(projects.is_archived, false),
     ),
     orderBy: [asc(projects.position)],
     with: {

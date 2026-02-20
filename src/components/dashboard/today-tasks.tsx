@@ -50,8 +50,8 @@ export function TodayTasks({ tasks }: TodayTasksProps) {
       prev.map((t) =>
         t.id === taskId
           ? { ...t, status: t.status === "done" ? "todo" : "done" }
-          : t
-      )
+          : t,
+      ),
     );
 
     try {
@@ -63,8 +63,8 @@ export function TodayTasks({ tasks }: TodayTasksProps) {
         prev.map((t) =>
           t.id === taskId
             ? { ...t, status: t.status === "done" ? "todo" : "done" }
-            : t
-        )
+            : t,
+        ),
       );
     }
   };
@@ -105,7 +105,8 @@ export function TodayTasks({ tasks }: TodayTasksProps) {
                   <p
                     className={cn(
                       "font-medium leading-none",
-                      task.status === "done" && "text-muted-foreground line-through"
+                      task.status === "done" &&
+                        "text-muted-foreground line-through",
                     )}
                   >
                     {task.title}
@@ -114,7 +115,7 @@ export function TodayTasks({ tasks }: TodayTasksProps) {
                     <span
                       className={cn(
                         "h-2 w-2 rounded-full",
-                        priorityColors[task.priority]
+                        priorityColors[task.priority],
                       )}
                     />
                     <span>{task.projectTitle}</span>

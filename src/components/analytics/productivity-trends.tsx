@@ -20,7 +20,8 @@ interface ProductivityTrendsProps {
 export function ProductivityTrends({ data }: ProductivityTrendsProps) {
   const { thisWeek, lastWeek } = data;
   const diff = thisWeek - lastWeek;
-  const percentChange = lastWeek > 0 ? Math.round((diff / lastWeek) * 100) : thisWeek > 0 ? 100 : 0;
+  const percentChange =
+    lastWeek > 0 ? Math.round((diff / lastWeek) * 100) : thisWeek > 0 ? 100 : 0;
 
   const chartData = [
     { name: "Last Week", tasks: lastWeek },
@@ -37,7 +38,9 @@ export function ProductivityTrends({ data }: ProductivityTrendsProps) {
           <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
             <TrendingUp className="h-10 w-10 mb-2 opacity-50" />
             <p className="text-sm">No completed tasks to compare yet.</p>
-            <p className="text-xs mt-1">Complete some tasks to see your trends.</p>
+            <p className="text-xs mt-1">
+              Complete some tasks to see your trends.
+            </p>
           </div>
         </CardContent>
       </Card>

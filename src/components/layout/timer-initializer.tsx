@@ -12,7 +12,11 @@ export function TimerInitializer({ timer }: TimerInitializerProps) {
 
   useEffect(() => {
     if (timer) {
-      setTimer(timer.id, new Date(timer.start_time), timer.project?.title || null);
+      setTimer(
+        timer.id,
+        new Date(timer.start_time),
+        timer.project?.title || null,
+      );
     }
   }, [timer, setTimer]);
 

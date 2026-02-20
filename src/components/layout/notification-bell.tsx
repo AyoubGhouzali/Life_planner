@@ -12,7 +12,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export function NotificationBell({ notifications }: { notifications: { unread: any[], recentRead: any[] } }) {
+export function NotificationBell({
+  notifications,
+}: {
+  notifications: { unread: any[]; recentRead: any[] };
+}) {
   const [unread, setUnread] = useState(notifications.unread);
   const [recentRead, setRecentRead] = useState(notifications.recentRead);
   const [open, setOpen] = useState(false);
@@ -31,18 +35,20 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
   const handleMarkAsRead = async (id: string, link?: string | null) => {
     const notification = unread.find((n: any) => n.id === id);
     if (notification) {
-        const newUnread = unread.filter((n: any) => n.id !== id);
-        setUnread(newUnread);
-        setRecentRead([{ ...notification, read_at: new Date() }, ...recentRead].slice(0, 5));
+      const newUnread = unread.filter((n: any) => n.id !== id);
+      setUnread(newUnread);
+      setRecentRead(
+        [{ ...notification, read_at: new Date() }, ...recentRead].slice(0, 5),
+      );
     }
 
-    markAsRead(id).catch(err => {
-        console.error("Failed to mark as read", err);
+    markAsRead(id).catch((err) => {
+      console.error("Failed to mark as read", err);
     });
 
     if (link) {
-        setOpen(false);
-        router.push(link);
+      setOpen(false);
+      router.push(link);
     }
   };
 
@@ -52,15 +58,20 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
     const userId = unread[0].user_id;
     const oldUnread = [...unread];
 
-    setRecentRead([...unread.map(n => ({...n, read_at: new Date()})), ...recentRead].slice(0, 5));
+    setRecentRead(
+      [
+        ...unread.map((n) => ({ ...n, read_at: new Date() })),
+        ...recentRead,
+      ].slice(0, 5),
+    );
     setUnread([]);
 
     try {
-        await markAllAsRead(userId);
-        toast.success("All notifications marked as read");
+      await markAllAsRead(userId);
+      toast.success("All notifications marked as read");
     } catch (error) {
-        setUnread(oldUnread);
-        toast.error("Failed to mark all as read");
+      setUnread(oldUnread);
+      toast.error("Failed to mark all as read");
     }
   };
 
@@ -78,14 +89,17 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        {bellButton}
-      </PopoverTrigger>
+      <PopoverTrigger asChild>{bellButton}</PopoverTrigger>
       <PopoverContent className="w-80 p-0" align="end">
         <div className="flex items-center justify-between border-b p-4">
           <h4 className="font-semibold">Notifications</h4>
           {unread.length > 0 && (
-            <Button variant="ghost" size="sm" onClick={handleMarkAllAsRead} className="text-xs h-auto py-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleMarkAllAsRead}
+              className="text-xs h-auto py-1"
+            >
               Mark all read
             </Button>
           )}
@@ -97,33 +111,52 @@ export function NotificationBell({ notifications }: { notifications: { unread: a
             </div>
           ) : (
             <div className="grid">
-               {unread.map((notification: any) => (
-                  <div key={notification.id} className="border-b px-4 py-3 hover:bg-muted/50 cursor-pointer transition-colors" onClick={() => handleMarkAsRead(notification.id, notification.link)}>
-                    <div className="flex items-start gap-3">
-                        <div className="h-2 w-2 mt-1.5 rounded-full bg-blue-600 shrink-0" />
-                        <div className="space-y-1">
-                            <p className="text-sm font-medium leading-none">{notification.title}</p>
-                            <p className="text-xs text-muted-foreground">{notification.message}</p>
-                            <p className="text-[10px] text-muted-foreground mt-1">{new Date(notification.created_at).toLocaleDateString()}</p>
-                        </div>
+              {unread.map((notification: any) => (
+                <div
+                  key={notification.id}
+                  className="border-b px-4 py-3 hover:bg-muted/50 cursor-pointer transition-colors"
+                  onClick={() =>
+                    handleMarkAsRead(notification.id, notification.link)
+                  }
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="h-2 w-2 mt-1.5 rounded-full bg-blue-600 shrink-0" />
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {notification.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {notification.message}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        {new Date(notification.created_at).toLocaleDateString()}
+                      </p>
                     </div>
                   </div>
-               ))}
-               {recentRead.length > 0 && (
-                   <>
-                    <div className="px-4 py-2 bg-muted/20 text-xs font-semibold text-muted-foreground">
-                        Recent
+                </div>
+              ))}
+              {recentRead.length > 0 && (
+                <>
+                  <div className="px-4 py-2 bg-muted/20 text-xs font-semibold text-muted-foreground">
+                    Recent
+                  </div>
+                  {recentRead.map((notification: any) => (
+                    <div
+                      key={notification.id}
+                      className="border-b px-4 py-3 opacity-60"
+                    >
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {notification.title}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {notification.message}
+                        </p>
+                      </div>
                     </div>
-                    {recentRead.map((notification: any) => (
-                        <div key={notification.id} className="border-b px-4 py-3 opacity-60">
-                             <div className="space-y-1">
-                                <p className="text-sm font-medium leading-none">{notification.title}</p>
-                                <p className="text-xs text-muted-foreground">{notification.message}</p>
-                            </div>
-                        </div>
-                    ))}
-                   </>
-               )}
+                  ))}
+                </>
+              )}
             </div>
           )}
         </div>

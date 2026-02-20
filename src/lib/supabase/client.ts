@@ -8,8 +8,5 @@ export function createClient() {
     console.error("Supabase environment variables are missing!");
   }
 
-  return createBrowserClient(
-    supabaseUrl || "",
-    supabaseAnonKey || ""
-  );
+  return createBrowserClient(supabaseUrl || "", supabaseAnonKey || "");
 }

@@ -48,20 +48,22 @@ export function GoalCard({ goal }: GoalCardProps) {
             {goal.description}
           </p>
         )}
-        
+
         <div className="space-y-2">
           <div className="flex justify-between text-xs font-medium">
             <span>Overall Progress</span>
-            <span>{goal.completedTasks} / {goal.totalTasks} tasks</span>
+            <span>
+              {goal.completedTasks} / {goal.totalTasks} tasks
+            </span>
           </div>
           <Progress value={goal.progress} className="h-2" />
         </div>
 
         <div className="flex items-center gap-2 pt-2">
-            <FolderOpen className="h-3 w-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">
-                {goal.goalProjects.length} linked projects
-            </span>
+          <FolderOpen className="h-3 w-3 text-muted-foreground" />
+          <span className="text-xs text-muted-foreground">
+            {goal.goalProjects.length} linked projects
+          </span>
         </div>
       </CardContent>
     </Card>

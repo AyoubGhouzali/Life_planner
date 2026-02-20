@@ -53,7 +53,7 @@ export function NoteList({ projectId, notes }: NoteListProps) {
       await togglePinNote(id);
       // toast.success("Note updated"); // Optional, could be noisy
     } catch (error) {
-        toast.error("Failed to update note");
+      toast.error("Failed to update note");
     }
   };
 
@@ -84,71 +84,100 @@ export function NoteList({ projectId, notes }: NoteListProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-medium flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Notes
+          <FileText className="h-4 w-4" />
+          Notes
         </h3>
         <Button size="sm" variant="ghost" onClick={() => setIsCreating(true)}>
           <Plus className="h-4 w-4 mr-1" />
           Add Note
         </Button>
       </div>
-      
+
       {notes.length === 0 ? (
         <div className="text-center text-sm text-muted-foreground py-8 border rounded-md border-dashed">
-            No notes yet.
+          No notes yet.
         </div>
       ) : (
-          <div className="grid gap-3">
-            {notes.map((note) => (
-                <Card key={note.id} className="relative group overflow-hidden transition-all hover:shadow-md">
-                    <CardContent className="p-4">
-                        <div className="flex items-start justify-between">
-                            <div className="space-y-1 w-full">
-                                <h4 className="font-semibold text-sm flex items-center gap-2">
-                                    {note.title}
-                                    {note.is_pinned && <Pin className="h-3 w-3 text-orange-500 fill-orange-500" />}
-                                </h4>
-                                {note.content && (
-                                    <p className="text-xs text-muted-foreground line-clamp-3 whitespace-pre-wrap">
-                                        {note.content}
-                                    </p>
-                                )}
-                                <p className="text-[10px] text-muted-foreground pt-1">
-                                    {formatDistanceToNow(new Date(note.updated_at), { addSuffix: true })}
-                                </p>
-                            </div>
-                            <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute top-2 right-2 bg-background/90 rounded-md p-1 shadow-sm border">
-                                <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => handleTogglePin(note.id)}>
-                                    {note.is_pinned ? <PinOff className="h-3 w-3" /> : <Pin className="h-3 w-3" />}
-                                </Button>
-                                <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => setEditingNoteId(note.id)}>
-                                    <Edit2 className="h-3 w-3" />
-                                </Button>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button size="icon" variant="ghost" className="h-6 w-6 text-destructive hover:text-destructive">
-                                            <Trash2 className="h-3 w-3" />
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Delete Note?</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This action cannot be undone.
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDelete(note.id)}>Delete</AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            ))}
-          </div>
+        <div className="grid gap-3">
+          {notes.map((note) => (
+            <Card
+              key={note.id}
+              className="relative group overflow-hidden transition-all hover:shadow-md"
+            >
+              <CardContent className="p-4">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1 w-full">
+                    <h4 className="font-semibold text-sm flex items-center gap-2">
+                      {note.title}
+                      {note.is_pinned && (
+                        <Pin className="h-3 w-3 text-orange-500 fill-orange-500" />
+                      )}
+                    </h4>
+                    {note.content && (
+                      <p className="text-xs text-muted-foreground line-clamp-3 whitespace-pre-wrap">
+                        {note.content}
+                      </p>
+                    )}
+                    <p className="text-[10px] text-muted-foreground pt-1">
+                      {formatDistanceToNow(new Date(note.updated_at), {
+                        addSuffix: true,
+                      })}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute top-2 right-2 bg-background/90 rounded-md p-1 shadow-sm border">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6"
+                      onClick={() => handleTogglePin(note.id)}
+                    >
+                      {note.is_pinned ? (
+                        <PinOff className="h-3 w-3" />
+                      ) : (
+                        <Pin className="h-3 w-3" />
+                      )}
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-6 w-6"
+                      onClick={() => setEditingNoteId(note.id)}
+                    >
+                      <Edit2 className="h-3 w-3" />
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6 text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Note?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDelete(note.id)}
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       )}
     </div>
   );

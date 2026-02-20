@@ -4,7 +4,7 @@ import {
   getDashboardStats,
   getTodaysTasks,
   getUpcomingTasks,
-  getRecentActivity
+  getRecentActivity,
 } from "@/lib/db/queries/dashboard";
 import { getAreas } from "@/lib/db/queries/areas";
 import { getTodaysHabits } from "@/lib/db/queries/habits";
@@ -19,7 +19,9 @@ import { ClientOnly } from "@/components/client-only";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -31,14 +33,14 @@ export default async function DashboardPage() {
     upcomingTasks,
     recentActivity,
     areas,
-    todaysHabits
+    todaysHabits,
   ] = await Promise.all([
     getDashboardStats(user.id),
     getTodaysTasks(user.id),
     getUpcomingTasks(user.id),
     getRecentActivity(user.id),
     getAreas(user.id),
-    getTodaysHabits(user.id)
+    getTodaysHabits(user.id),
   ]);
 
   return (
@@ -59,13 +61,13 @@ export default async function DashboardPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         <div className="col-span-1 lg:col-span-4 flex flex-col gap-6">
-            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 -my-4 border-b">
-              <ClientOnly>
-                <QuickAddTask areas={areas} />
-              </ClientOnly>
-            </div>
+          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 -my-4 border-b">
+            <ClientOnly>
+              <QuickAddTask areas={areas} />
+            </ClientOnly>
+          </div>
 
-            <TodayTasks tasks={todaysTasks} />
+          <TodayTasks tasks={todaysTasks} />
         </div>
 
         <div className="col-span-1 lg:col-span-3 flex flex-col gap-6">

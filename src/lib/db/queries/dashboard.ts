@@ -1,23 +1,6 @@
 import { db } from "@/lib/db";
-import {
-  tasks,
-  projects,
-  columns,
-  boards,
-  lifeAreas,
-} from "@/lib/db/schema";
-import {
-  and,
-  eq,
-  lt,
-  gte,
-  lte,
-  desc,
-  count,
-  or,
-  ne,
-  sql,
-} from "drizzle-orm";
+import { tasks, projects, columns, boards, lifeAreas } from "@/lib/db/schema";
+import { and, eq, lt, gte, lte, desc, count, or, ne, sql } from "drizzle-orm";
 import { addDays, startOfDay, endOfDay } from "date-fns";
 
 export async function getTodaysTasks(userId: string) {
@@ -47,8 +30,8 @@ export async function getTodaysTasks(userId: string) {
       and(
         eq(lifeAreas.user_id, userId),
         gte(tasks.due_date, todayStart),
-        lte(tasks.due_date, todayEnd)
-      )
+        lte(tasks.due_date, todayEnd),
+      ),
     )
     .orderBy(desc(tasks.priority), tasks.created_at);
 
@@ -82,8 +65,8 @@ export async function getUpcomingTasks(userId: string, days: number = 7) {
         eq(lifeAreas.user_id, userId),
         gte(tasks.due_date, todayEnd), // Start after today
         lte(tasks.due_date, futureDate),
-        ne(tasks.status, "done") // Only pending tasks
-      )
+        ne(tasks.status, "done"), // Only pending tasks
+      ),
     )
     .orderBy(tasks.due_date, desc(tasks.priority));
 
@@ -115,8 +98,8 @@ export async function getOverdueTasks(userId: string) {
       and(
         eq(lifeAreas.user_id, userId),
         lt(tasks.due_date, now),
-        ne(tasks.status, "done")
-      )
+        ne(tasks.status, "done"),
+      ),
     )
     .orderBy(tasks.due_date, desc(tasks.priority));
 
@@ -184,12 +167,7 @@ export async function getDashboardStats(userId: string) {
     .innerJoin(columns, eq(projects.column_id, columns.id))
     .innerJoin(boards, eq(columns.board_id, boards.id))
     .innerJoin(lifeAreas, eq(boards.area_id, lifeAreas.id))
-    .where(
-      and(
-        eq(lifeAreas.user_id, userId),
-        ne(tasks.status, "done")
-      )
-    );
+    .where(and(eq(lifeAreas.user_id, userId), ne(tasks.status, "done")));
 
   // Completed today
   const completedTodayQuery = db
@@ -204,8 +182,8 @@ export async function getDashboardStats(userId: string) {
         eq(lifeAreas.user_id, userId),
         eq(tasks.status, "done"),
         gte(tasks.completed_at, todayStart),
-        lte(tasks.completed_at, todayEnd)
-      )
+        lte(tasks.completed_at, todayEnd),
+      ),
     );
 
   // Overdue
@@ -220,8 +198,8 @@ export async function getDashboardStats(userId: string) {
       and(
         eq(lifeAreas.user_id, userId),
         ne(tasks.status, "done"),
-        lt(tasks.due_date, now)
-      )
+        lt(tasks.due_date, now),
+      ),
     );
 
   const [totalTasks, completedToday, overdue] = await Promise.all([

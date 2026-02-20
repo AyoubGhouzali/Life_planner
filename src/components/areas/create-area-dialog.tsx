@@ -26,18 +26,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { 
-  Briefcase, 
-  Home, 
-  Dumbbell, 
-  PiggyBank, 
-  GraduationCap, 
-  Heart, 
-  Users, 
-  Plane, 
-  Music, 
+import {
+  Briefcase,
+  Home,
+  Dumbbell,
+  PiggyBank,
+  GraduationCap,
+  Heart,
+  Users,
+  Plane,
+  Music,
   Code,
-  Circle
+  Circle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -129,7 +129,10 @@ export function CreateAreaDialog({ children }: { children: React.ReactNode }) {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. Work, Health, Finance" {...field} />
+                    <Input
+                      placeholder="e.g. Work, Health, Finance"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -169,7 +172,8 @@ export function CreateAreaDialog({ children }: { children: React.ReactNode }) {
                           size="icon"
                           className={cn(
                             "h-9 w-9",
-                            field.value === item.name && "border-2 border-primary"
+                            field.value === item.name &&
+                              "border-2 border-primary",
                           )}
                           onClick={() => field.onChange(item.name)}
                         >
@@ -195,7 +199,8 @@ export function CreateAreaDialog({ children }: { children: React.ReactNode }) {
                         type="button"
                         className={cn(
                           "h-6 w-6 rounded-full border border-black/10 transition-transform hover:scale-110",
-                          field.value === color && "ring-2 ring-primary ring-offset-2"
+                          field.value === color &&
+                            "ring-2 ring-primary ring-offset-2",
                         )}
                         style={{ backgroundColor: color }}
                         onClick={() => field.onChange(color)}

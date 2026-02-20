@@ -37,7 +37,7 @@ export function TaskList({ projectId, initialTasks }: TaskListProps) {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   async function handleDragEnd(event: DragEndEvent) {

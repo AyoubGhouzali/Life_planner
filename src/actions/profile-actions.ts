@@ -6,7 +6,10 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
-export async function updateProfile(userId: string, data: { displayName?: string; avatarUrl?: string }) {
+export async function updateProfile(
+  userId: string,
+  data: { displayName?: string; avatarUrl?: string },
+) {
   try {
     await db
       .update(profiles)
@@ -51,22 +54,22 @@ export async function deleteAccount(userId: string) {
     // Note: This requires the service role key if run from server action context directly on auth.admin
     // but typically users delete their own account via client SDK or an edge function.
     // However, Supabase Auth Admin API is needed for complete deletion.
-    // Alternatively, we can just delete the profile and let the user remain in Auth (orphaned), 
+    // Alternatively, we can just delete the profile and let the user remain in Auth (orphaned),
     // or use a Postgres trigger to delete from auth.users.
-    
+
     // For now, we'll try to delete from the public profiles table which should cascade delete
     // everything else related to the user in the public schema.
     // The auth user deletion usually requires admin privileges or calling deleteUser via the client if it's the own user.
     // Standard practice: Call supabase.auth.admin.deleteUser(userId) in a secure environment.
-    
+
     // Since we are in a server action with user context, we might not have admin rights.
     // Let's assume we delete the profile first.
-    
+
     await db.delete(profiles).where(eq(profiles.id, userId));
-    
+
     // Sign out
     await supabase.auth.signOut();
-    
+
     return { success: true };
   } catch (error) {
     console.error("Error deleting account:", error);
@@ -89,13 +92,13 @@ export async function exportUserData(userId: string) {
                       with: {
                         tasks: true,
                         notes: true,
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         habits: true,
         goals: true,

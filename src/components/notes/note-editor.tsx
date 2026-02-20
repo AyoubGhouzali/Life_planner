@@ -19,7 +19,12 @@ interface NoteEditorProps {
   onSuccess: () => void;
 }
 
-export function NoteEditor({ projectId, note, onCancel, onSuccess }: NoteEditorProps) {
+export function NoteEditor({
+  projectId,
+  note,
+  onCancel,
+  onSuccess,
+}: NoteEditorProps) {
   const [title, setTitle] = useState(note?.title || "");
   const [content, setContent] = useState(note?.content || "");
   const [loading, setLoading] = useState(false);
@@ -33,7 +38,7 @@ export function NoteEditor({ projectId, note, onCancel, onSuccess }: NoteEditorP
       const formData = new FormData();
       formData.append("title", title);
       formData.append("content", content);
-      
+
       if (note) {
         await updateNote(note.id, formData);
         toast.success("Note updated");
@@ -51,7 +56,10 @@ export function NoteEditor({ projectId, note, onCancel, onSuccess }: NoteEditorP
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-md bg-muted/20">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 p-4 border rounded-md bg-muted/20"
+    >
       <Input
         placeholder="Note Title"
         value={title}

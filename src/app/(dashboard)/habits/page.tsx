@@ -7,7 +7,9 @@ import { CreateHabitDialog } from "@/components/habits/create-habit-dialog";
 
 export default async function HabitsPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -15,7 +17,7 @@ export default async function HabitsPage() {
 
   const [habits, areas] = await Promise.all([
     getHabits(user.id),
-    getAreas(user.id)
+    getAreas(user.id),
   ]);
 
   return (
@@ -32,7 +34,9 @@ export default async function HabitsPage() {
 
       {habits.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed rounded-lg">
-          <p className="text-muted-foreground mb-4">You haven't created any habits yet.</p>
+          <p className="text-muted-foreground mb-4">
+            You haven't created any habits yet.
+          </p>
           <CreateHabitDialog areas={areas} />
         </div>
       ) : (

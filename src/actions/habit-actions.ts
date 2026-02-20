@@ -10,14 +10,16 @@ import { startOfDay, endOfDay } from "date-fns";
 
 export async function createHabit(formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
-  const areaId = formData.get("areaId") as string || null;
+  const areaId = (formData.get("areaId") as string) || null;
   const frequency = formData.get("frequency") as "daily" | "weekly" | "custom";
-  const targetCount = parseInt(formData.get("targetCount") as string || "1");
+  const targetCount = parseInt((formData.get("targetCount") as string) || "1");
 
   const validated = habitSchema.parse({
     name,
@@ -27,14 +29,17 @@ export async function createHabit(formData: FormData) {
     targetCount,
   });
 
-  const [newHabit] = await db.insert(habits).values({
-    user_id: user.id,
-    area_id: validated.areaId,
-    name: validated.name,
-    description: validated.description,
-    frequency: validated.frequency,
-    target_count: validated.targetCount,
-  }).returning();
+  const [newHabit] = await db
+    .insert(habits)
+    .values({
+      user_id: user.id,
+      area_id: validated.areaId,
+      name: validated.name,
+      description: validated.description,
+      frequency: validated.frequency,
+      target_count: validated.targetCount,
+    })
+    .returning();
 
   revalidatePath("/habits");
   revalidatePath("/dashboard");
@@ -43,14 +48,16 @@ export async function createHabit(formData: FormData) {
 
 export async function updateHabit(id: string, formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
-  const areaId = formData.get("areaId") as string || null;
+  const areaId = (formData.get("areaId") as string) || null;
   const frequency = formData.get("frequency") as "daily" | "weekly" | "custom";
-  const targetCount = parseInt(formData.get("targetCount") as string || "1");
+  const targetCount = parseInt((formData.get("targetCount") as string) || "1");
 
   const validated = habitSchema.parse({
     name,
@@ -60,14 +67,18 @@ export async function updateHabit(id: string, formData: FormData) {
     targetCount,
   });
 
-  const [updatedHabit] = await db.update(habits).set({
-    area_id: validated.areaId,
-    name: validated.name,
-    description: validated.description,
-    frequency: validated.frequency,
-    target_count: validated.targetCount,
-    updated_at: new Date(),
-  }).where(eq(habits.id, id)).returning();
+  const [updatedHabit] = await db
+    .update(habits)
+    .set({
+      area_id: validated.areaId,
+      name: validated.name,
+      description: validated.description,
+      frequency: validated.frequency,
+      target_count: validated.targetCount,
+      updated_at: new Date(),
+    })
+    .where(eq(habits.id, id))
+    .returning();
 
   revalidatePath("/habits");
   revalidatePath("/dashboard");
@@ -76,7 +87,9 @@ export async function updateHabit(id: string, formData: FormData) {
 
 export async function deleteHabit(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   await db.delete(habits).where(eq(habits.id, id));
@@ -87,7 +100,9 @@ export async function deleteHabit(id: string) {
 
 export async function logHabit(habitId: string, date: Date = new Date()) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   // Check if already logged today
@@ -98,13 +113,14 @@ export async function logHabit(habitId: string, date: Date = new Date()) {
     where: and(
       eq(habitLogs.habit_id, habitId),
       gte(habitLogs.completed_at, dayStart),
-      lte(habitLogs.completed_at, dayEnd)
-    )
+      lte(habitLogs.completed_at, dayEnd),
+    ),
   });
 
   if (existing) {
     // Increment value or just return
-    await db.update(habitLogs)
+    await db
+      .update(habitLogs)
       .set({ value: existing.value + 1 })
       .where(eq(habitLogs.id, existing.id));
   } else {
@@ -121,19 +137,23 @@ export async function logHabit(habitId: string, date: Date = new Date()) {
 
 export async function unlogHabit(habitId: string, date: Date = new Date()) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const dayStart = startOfDay(date);
   const dayEnd = endOfDay(date);
 
-  await db.delete(habitLogs).where(
-    and(
-      eq(habitLogs.habit_id, habitId),
-      gte(habitLogs.completed_at, dayStart),
-      lte(habitLogs.completed_at, dayEnd)
-    )
-  );
+  await db
+    .delete(habitLogs)
+    .where(
+      and(
+        eq(habitLogs.habit_id, habitId),
+        gte(habitLogs.completed_at, dayStart),
+        lte(habitLogs.completed_at, dayEnd),
+      ),
+    );
 
   revalidatePath("/habits");
   revalidatePath("/dashboard");

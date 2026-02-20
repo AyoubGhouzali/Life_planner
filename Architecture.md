@@ -1,7 +1,7 @@
 # Architecture: LifePlanner Technical Design
 
 **Version:** 1.0  
-**Last Updated:** February 2026  
+**Last Updated:** February 2026
 
 ---
 
@@ -67,6 +67,7 @@ LifePlanner follows a **modern server-first architecture** built on Next.js 15 A
 **Decision:** Use Next.js 15 with the App Router (not Pages Router).
 
 **Rationale:**
+
 - React Server Components reduce client-side JavaScript bundle size.
 - Server Actions provide type-safe mutations without building a separate API layer.
 - Built-in route-based code splitting and streaming SSR for performance.
@@ -74,6 +75,7 @@ LifePlanner follows a **modern server-first architecture** built on Next.js 15 A
 - File-based routing aligns naturally with the app's navigation structure.
 
 **Patterns:**
+
 - Default to Server Components. Add `"use client"` only when the component needs state, effects, or browser APIs.
 - Use `loading.tsx` and `error.tsx` files for route-level loading/error states.
 - Use route groups `(auth)` and `(dashboard)` to share layouts without affecting URLs.
@@ -83,6 +85,7 @@ LifePlanner follows a **modern server-first architecture** built on Next.js 15 A
 **Decision:** Use Supabase as the database and authentication provider.
 
 **Rationale:**
+
 - Managed PostgreSQL with generous free tier (500MB database, 50K monthly active users).
 - Built-in authentication with email/password and OAuth support.
 - Row Level Security (RLS) for per-user data isolation at the database level.
@@ -90,6 +93,7 @@ LifePlanner follows a **modern server-first architecture** built on Next.js 15 A
 - Dashboard UI for debugging and data management during development.
 
 **Constraints:**
+
 - All tables MUST have RLS policies. No table should be accessible without authentication.
 - Direct Supabase client usage is limited to auth operations. Data queries go through Drizzle ORM.
 - Service role key is NEVER exposed to the client.
@@ -99,17 +103,19 @@ LifePlanner follows a **modern server-first architecture** built on Next.js 15 A
 **Decision:** Use Drizzle ORM for all database operations.
 
 **Rationale:**
+
 - Fully type-safe: schema definitions generate TypeScript types automatically.
 - SQL-like query builder feels natural for PostgreSQL.
 - Lightweight with no runtime overhead (unlike Prisma).
 - Supports migrations and schema push for development.
 
 **Patterns:**
+
 ```typescript
 // Schema definition → generates types automatically
-export const tasks = pgTable('tasks', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  title: text('title').notNull(),
+export const tasks = pgTable("tasks", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: text("title").notNull(),
   // ...
 });
 
@@ -123,12 +129,14 @@ export type NewTask = typeof tasks.$inferInsert;
 **Decision:** Use shadcn/ui as the component library with Tailwind CSS for styling.
 
 **Rationale:**
+
 - shadcn/ui components are copied into the project (not a dependency), giving full control.
 - Built on Radix UI primitives — accessible by default (keyboard nav, screen readers, focus management).
 - Tailwind CSS enables rapid, consistent styling without CSS-in-JS overhead.
 - Both are the de facto standard in the Next.js ecosystem.
 
 **Patterns:**
+
 - Install shadcn/ui components as needed: `npx shadcn-ui@latest add button dialog card`.
 - Customize theme via `tailwind.config.ts` and CSS variables.
 - Never use inline styles or separate CSS files.
@@ -139,11 +147,13 @@ export type NewTask = typeof tasks.$inferInsert;
 **Decision:** Use Zustand for client-side UI state and TanStack Query for server state caching.
 
 **Rationale:**
+
 - **Zustand:** Minimal boilerplate for UI state (sidebar open/closed, active filters, modal state). No context provider nesting.
 - **TanStack Query:** Handles server data caching, revalidation, optimistic updates, and background refetching. Eliminates manual loading/error state management.
 - Together they create a clean separation: Zustand owns what the client controls, TanStack Query owns what the server controls.
 
 **Patterns:**
+
 ```typescript
 // Zustand — UI state
 export const useUIStore = create<UIState>((set) => ({
@@ -154,7 +164,7 @@ export const useUIStore = create<UIState>((set) => ({
 // TanStack Query — server state
 export function useTasks(projectId: string) {
   return useQuery({
-    queryKey: ['tasks', projectId],
+    queryKey: ["tasks", projectId],
     queryFn: () => fetchTasks(projectId),
   });
 }
@@ -165,12 +175,14 @@ export function useTasks(projectId: string) {
 **Decision:** Use @dnd-kit for all drag-and-drop interactions.
 
 **Rationale:**
+
 - Purpose-built for React with hooks-based API.
 - Supports keyboard-accessible drag-and-drop (important for accessibility).
 - Handles both sortable lists (reorder tasks) and transferable items (move between columns).
 - Performant — uses CSS transforms instead of DOM manipulation.
 
 **Patterns:**
+
 - Use `<DndContext>` at the board level.
 - Use `<SortableContext>` for each column.
 - Implement `onDragEnd` to call Server Actions for persistence.
@@ -181,6 +193,7 @@ export function useTasks(projectId: string) {
 **Decision:** Use Supabase Auth with server-side session management via Next.js middleware.
 
 **Flow:**
+
 ```
 1. User submits login form
 2. Server Action calls supabase.auth.signInWithPassword()
@@ -192,6 +205,7 @@ export function useTasks(projectId: string) {
 ```
 
 **Auth Architecture:**
+
 ```
 src/lib/supabase/
 ├── client.ts       # createBrowserClient() — for client components
@@ -244,15 +258,15 @@ profiles (1) ──── (N) templates
 
 ### 3.3 Key Schema Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| UUID primary keys | Enables client-side ID generation for optimistic updates. No sequential IDs to leak data volume. |
-| `position` integer fields | For drag-and-drop ordering of areas, columns, projects, and tasks. Re-indexed on reorder. |
-| JSON `settings` on profiles | Flexible storage for user preferences (theme, defaults) without schema migrations. |
-| JSON `tags` on projects | Quick filtering without joins for simple tag display. Normalized `project_tags` table for advanced queries. |
-| `is_process` boolean on projects | Distinguishes recurring processes (e.g., "Weekly Review") from one-time projects. |
-| Self-referencing `parent_task_id` | Enables one level of subtasks without a separate table. |
-| `wip_limit` on columns | Enforces work-in-progress limits for Kanban best practices. |
+| Decision                          | Rationale                                                                                                   |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| UUID primary keys                 | Enables client-side ID generation for optimistic updates. No sequential IDs to leak data volume.            |
+| `position` integer fields         | For drag-and-drop ordering of areas, columns, projects, and tasks. Re-indexed on reorder.                   |
+| JSON `settings` on profiles       | Flexible storage for user preferences (theme, defaults) without schema migrations.                          |
+| JSON `tags` on projects           | Quick filtering without joins for simple tag display. Normalized `project_tags` table for advanced queries. |
+| `is_process` boolean on projects  | Distinguishes recurring processes (e.g., "Weekly Review") from one-time projects.                           |
+| Self-referencing `parent_task_id` | Enables one level of subtasks without a separate table.                                                     |
+| `wip_limit` on columns            | Enforces work-in-progress limits for Kanban best practices.                                                 |
 
 ### 3.4 Row Level Security (RLS)
 
@@ -285,12 +299,12 @@ CREATE POLICY "Users can manage own tasks" ON tasks
 
 ### 3.5 Database Triggers
 
-| Trigger | Action |
-|---------|--------|
-| `on_auth_user_created` | Auto-creates profile + 5 default life areas |
+| Trigger                | Action                                                              |
+| ---------------------- | ------------------------------------------------------------------- |
+| `on_auth_user_created` | Auto-creates profile + 5 default life areas                         |
 | `on_life_area_created` | Auto-creates a default board + 3 columns (To Do, In Progress, Done) |
-| `on_task_completed` | Sets `completed_at` timestamp; creates task_event record |
-| `on_row_updated` | Auto-updates `updated_at` timestamp on all tables |
+| `on_task_completed`    | Sets `completed_at` timestamp; creates task_event record            |
+| `on_row_updated`       | Auto-updates `updated_at` timestamp on all tables                   |
 
 ---
 
@@ -425,7 +439,7 @@ Page (RSC) → lib/db/queries/areas.ts → Drizzle → PostgreSQL → Data
 #### Write Path (Server Actions + Optimistic Updates)
 
 ```
-User Action (click, drag) 
+User Action (click, drag)
     ↓
 Client Component calls Server Action
     ↓ (simultaneously)
@@ -444,31 +458,33 @@ Client Component calls Server Action
 // hooks/use-tasks.ts
 export function useToggleTask() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: toggleTask, // Server Action
     onMutate: async (taskId) => {
       // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['tasks'] });
-      
+      await queryClient.cancelQueries({ queryKey: ["tasks"] });
+
       // Snapshot previous state
-      const previous = queryClient.getQueryData(['tasks']);
-      
+      const previous = queryClient.getQueryData(["tasks"]);
+
       // Optimistically update
-      queryClient.setQueryData(['tasks'], (old) =>
-        old.map(t => t.id === taskId ? { ...t, is_completed: !t.is_completed } : t)
+      queryClient.setQueryData(["tasks"], (old) =>
+        old.map((t) =>
+          t.id === taskId ? { ...t, is_completed: !t.is_completed } : t,
+        ),
       );
-      
+
       return { previous };
     },
     onError: (err, taskId, context) => {
       // Rollback on error
-      queryClient.setQueryData(['tasks'], context.previous);
-      toast.error('Failed to update task');
+      queryClient.setQueryData(["tasks"], context.previous);
+      toast.error("Failed to update task");
     },
     onSettled: () => {
       // Refetch to ensure consistency
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 }
@@ -480,29 +496,34 @@ All mutations follow this pattern:
 
 ```typescript
 // actions/task-actions.ts
-'use server';
+"use server";
 
-import { createServerClient } from '@/lib/supabase/server';
-import { db } from '@/lib/db';
-import { tasks } from '@/lib/db/schema';
-import { taskSchema } from '@/lib/validations/task';
-import { revalidatePath } from 'next/cache';
+import { createServerClient } from "@/lib/supabase/server";
+import { db } from "@/lib/db";
+import { tasks } from "@/lib/db/schema";
+import { taskSchema } from "@/lib/validations/task";
+import { revalidatePath } from "next/cache";
 
 export async function createTask(formData: FormData) {
   // 1. Authenticate
   const supabase = await createServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Unauthorized");
 
   // 2. Validate input
   const parsed = taskSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) throw new Error(parsed.error.message);
 
   // 3. Execute query
-  const [task] = await db.insert(tasks).values({
-    ...parsed.data,
-    // RLS ensures user can only insert into their own projects
-  }).returning();
+  const [task] = await db
+    .insert(tasks)
+    .values({
+      ...parsed.data,
+      // RLS ensures user can only insert into their own projects
+    })
+    .returning();
 
   // 4. Revalidate cache
   revalidatePath(`/areas/${task.areaId}`);
@@ -517,14 +538,14 @@ export async function createTask(formData: FormData) {
 
 ```typescript
 // middleware.ts
-import { createServerClient } from '@supabase/ssr';
-import { NextResponse, type NextRequest } from 'next/server';
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_ROUTES = ['/', '/login', '/signup', '/forgot-password'];
+const PUBLIC_ROUTES = ["/", "/login", "/signup", "/forgot-password"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Allow public routes
   if (PUBLIC_ROUTES.includes(pathname)) {
     return NextResponse.next();
@@ -544,22 +565,26 @@ export async function middleware(request: NextRequest) {
           });
         },
       },
-    }
+    },
   );
 
   // Refresh session
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Redirect unauthenticated users
   if (!user) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
 ```
 
@@ -584,7 +609,7 @@ frontend:
   artifacts:
     baseDirectory: .next
     files:
-      - '**/*'
+      - "**/*"
   cache:
     paths:
       - .next/cache/**/*
@@ -621,16 +646,16 @@ Live: Application available at custom domain
 
 ## 7. Performance Strategy
 
-| Technique | Implementation |
-|-----------|----------------|
-| **Server Components** | Default to RSC. Client JS only for interactive elements. |
-| **Streaming SSR** | Use `<Suspense>` boundaries to stream dashboard widgets independently. |
-| **Route Prefetching** | Next.js `<Link>` auto-prefetches visible routes. |
-| **Image Optimization** | `next/image` for all images with proper width/height/blur placeholders. |
-| **Database Indexes** | Indexes on all foreign keys, position fields, and common filter columns. |
-| **Query Optimization** | Use `select()` to fetch only needed columns. Avoid N+1 with joins. |
-| **Bundle Splitting** | Dynamic `import()` for heavy components (charts, rich text editor). |
-| **Optimistic Updates** | UI responds instantly; server syncs in background. |
+| Technique              | Implementation                                                           |
+| ---------------------- | ------------------------------------------------------------------------ |
+| **Server Components**  | Default to RSC. Client JS only for interactive elements.                 |
+| **Streaming SSR**      | Use `<Suspense>` boundaries to stream dashboard widgets independently.   |
+| **Route Prefetching**  | Next.js `<Link>` auto-prefetches visible routes.                         |
+| **Image Optimization** | `next/image` for all images with proper width/height/blur placeholders.  |
+| **Database Indexes**   | Indexes on all foreign keys, position fields, and common filter columns. |
+| **Query Optimization** | Use `select()` to fetch only needed columns. Avoid N+1 with joins.       |
+| **Bundle Splitting**   | Dynamic `import()` for heavy components (charts, rich text editor).      |
+| **Optimistic Updates** | UI responds instantly; server syncs in background.                       |
 
 ---
 
@@ -658,7 +683,7 @@ export default function AreaError({ error, reset }: { error: Error; reset: () =>
 All Server Actions return a consistent result shape:
 
 ```typescript
-type ActionResult<T> = 
+type ActionResult<T> =
   | { success: true; data: T }
   | { success: false; error: string };
 ```
@@ -669,23 +694,23 @@ Use `sonner` for non-blocking feedback:
 
 ```typescript
 // Success: toast after optimistic update confirms
-toast.success('Task completed');
+toast.success("Task completed");
 
 // Error: toast after optimistic rollback
-toast.error('Failed to update task. Please try again.');
+toast.error("Failed to update task. Please try again.");
 ```
 
 ---
 
 ## 9. Security Checklist
 
-| Layer | Control |
-|-------|---------|
-| **Database** | RLS enabled on ALL tables. No table without policies. |
-| **Auth** | Supabase Auth with HttpOnly cookies. No tokens in localStorage. |
-| **Server Actions** | Every action verifies `auth.uid()` before proceeding. |
-| **Input Validation** | Zod schemas validate all user input server-side. |
+| Layer                     | Control                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| **Database**              | RLS enabled on ALL tables. No table without policies.                        |
+| **Auth**                  | Supabase Auth with HttpOnly cookies. No tokens in localStorage.              |
+| **Server Actions**        | Every action verifies `auth.uid()` before proceeding.                        |
+| **Input Validation**      | Zod schemas validate all user input server-side.                             |
 | **Environment Variables** | Service role key only on server. `NEXT_PUBLIC_` prefix only for safe values. |
-| **CORS** | Supabase configured to accept requests only from the app domain. |
-| **Rate Limiting** | Auth endpoints rate-limited via Supabase. Custom limits on heavy operations. |
-| **SQL Injection** | Drizzle ORM parameterizes all queries. No raw SQL with user input. |
+| **CORS**                  | Supabase configured to accept requests only from the app domain.             |
+| **Rate Limiting**         | Auth endpoints rate-limited via Supabase. Custom limits on heavy operations. |
+| **SQL Injection**         | Drizzle ORM parameterizes all queries. No raw SQL with user input.           |

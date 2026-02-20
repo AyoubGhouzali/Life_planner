@@ -1,6 +1,10 @@
 "use client";
 
-import { useSortable, verticalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import {
+  useSortable,
+  verticalListSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ProjectCard } from "./project-card";
 import { AddProject } from "./add-project";
@@ -32,7 +36,8 @@ export function KanbanColumn({ column }: ColumnProps) {
     transform: CSS.Translate.toString(transform),
   };
 
-  const isOverWipLimit = column.wip_limit && column.projects.length > column.wip_limit;
+  const isOverWipLimit =
+    column.wip_limit && column.projects.length > column.wip_limit;
 
   return (
     <div
@@ -41,12 +46,12 @@ export function KanbanColumn({ column }: ColumnProps) {
       className={cn(
         "flex flex-col w-[300px] shrink-0 bg-muted/50 rounded-xl border border-border transition-colors",
         isDragging && "opacity-50",
-        isOverWipLimit && "bg-destructive/5 border-destructive/20"
+        isOverWipLimit && "bg-destructive/5 border-destructive/20",
       )}
     >
-      <ColumnHeader 
-        column={column} 
-        projectCount={column.projects.length} 
+      <ColumnHeader
+        column={column}
+        projectCount={column.projects.length}
         dragHandleProps={{ ...attributes, ...listeners }}
       />
 

@@ -32,9 +32,7 @@ export function SummaryStats({ stats }: SummaryStatsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats.completedToday}</div>
-          <p className="text-xs text-muted-foreground">
-            Tasks finished today
-          </p>
+          <p className="text-xs text-muted-foreground">Tasks finished today</p>
         </CardContent>
       </Card>
       <Card>
@@ -43,7 +41,9 @@ export function SummaryStats({ stats }: SummaryStatsProps) {
           <Clock className="h-4 w-4 text-destructive" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-destructive">{stats.overdue}</div>
+          <div className="text-2xl font-bold text-destructive">
+            {stats.overdue}
+          </div>
           <p className="text-xs text-muted-foreground">
             Tasks past their due date
           </p>

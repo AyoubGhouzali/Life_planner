@@ -21,7 +21,7 @@ export function SettingsDataForm({ profile }: { profile: any }) {
       const result = await exportUserData(profile.id);
       if (result.success && result.data) {
         const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-          JSON.stringify(result.data, null, 2)
+          JSON.stringify(result.data, null, 2),
         )}`;
         const link = document.createElement("a");
         link.href = jsonString;
@@ -48,11 +48,17 @@ export function SettingsDataForm({ profile }: { profile: any }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col space-y-2">
-           <Button onClick={onExportJSON} disabled={loading} variant="outline" className="w-full sm:w-auto">
+          <Button
+            onClick={onExportJSON}
+            disabled={loading}
+            variant="outline"
+            className="w-full sm:w-auto"
+          >
             {loading ? "Exporting..." : "Export All Data (JSON)"}
           </Button>
-           <p className="text-sm text-muted-foreground">
-            Your export will include your profile, areas, boards, projects, tasks, habits, and goals.
+          <p className="text-sm text-muted-foreground">
+            Your export will include your profile, areas, boards, projects,
+            tasks, habits, and goals.
           </p>
         </div>
       </CardContent>

@@ -17,7 +17,9 @@ export const metadata: Metadata = {
 
 export default async function SettingsPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -40,7 +42,7 @@ export default async function SettingsPage() {
       <Separator className="my-6" />
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
         <aside className="-mx-4 lg:w-1/5">
-            {/* Sidebar navigation could go here if using sidebar layout for settings */}
+          {/* Sidebar navigation could go here if using sidebar layout for settings */}
         </aside>
         <div className="flex-1 lg:max-w-2xl">
           <Tabs defaultValue="profile" className="space-y-4">
@@ -52,19 +54,19 @@ export default async function SettingsPage() {
               <TabsTrigger value="account">Account</TabsTrigger>
             </TabsList>
             <TabsContent value="profile" className="space-y-4">
-               <SettingsProfileForm profile={profile} />
+              <SettingsProfileForm profile={profile} />
             </TabsContent>
             <TabsContent value="appearance" className="space-y-4">
-               <SettingsAppearanceForm profile={profile} />
+              <SettingsAppearanceForm profile={profile} />
             </TabsContent>
             <TabsContent value="notifications" className="space-y-4">
-               <SettingsNotificationsForm profile={profile} />
+              <SettingsNotificationsForm profile={profile} />
             </TabsContent>
-             <TabsContent value="data" className="space-y-4">
-               <SettingsDataForm profile={profile} />
+            <TabsContent value="data" className="space-y-4">
+              <SettingsDataForm profile={profile} />
             </TabsContent>
             <TabsContent value="account" className="space-y-4">
-               <SettingsAccountForm profile={profile} />
+              <SettingsAccountForm profile={profile} />
             </TabsContent>
           </Tabs>
         </div>

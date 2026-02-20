@@ -25,7 +25,7 @@ export function PeriodSelector({ defaultValue }: { defaultValue: string }) {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(
     fromParam && toParam
       ? { from: new Date(fromParam), to: new Date(toParam) }
-      : undefined
+      : undefined,
   );
   const [open, setOpen] = useState(false);
 

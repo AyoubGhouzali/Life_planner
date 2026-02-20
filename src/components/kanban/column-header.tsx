@@ -30,7 +30,11 @@ interface ColumnHeaderProps {
   dragHandleProps?: any;
 }
 
-export function ColumnHeader({ column, projectCount, dragHandleProps }: ColumnHeaderProps) {
+export function ColumnHeader({
+  column,
+  projectCount,
+  dragHandleProps,
+}: ColumnHeaderProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -53,19 +57,24 @@ export function ColumnHeader({ column, projectCount, dragHandleProps }: ColumnHe
   return (
     <>
       <div className="flex items-center justify-between p-3 border-b bg-background/50 rounded-t-xl">
-        <div className="flex items-center gap-2 flex-1 min-w-0" {...dragHandleProps}>
+        <div
+          className="flex items-center gap-2 flex-1 min-w-0"
+          {...dragHandleProps}
+        >
           <h3 className="font-semibold text-sm truncate">{column.name}</h3>
-          <span className={cn(
-            "text-xs px-1.5 py-0.5 rounded-full font-medium shrink-0",
-            isOverWipLimit 
-              ? "bg-destructive text-destructive-foreground" 
-              : "bg-muted text-muted-foreground"
-          )}>
+          <span
+            className={cn(
+              "text-xs px-1.5 py-0.5 rounded-full font-medium shrink-0",
+              isOverWipLimit
+                ? "bg-destructive text-destructive-foreground"
+                : "bg-muted text-muted-foreground",
+            )}
+          >
             {projectCount}
             {column.wip_limit && ` / ${column.wip_limit}`}
           </span>
         </div>
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
@@ -77,7 +86,7 @@ export function ColumnHeader({ column, projectCount, dragHandleProps }: ColumnHe
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="text-destructive focus:text-destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
             >
@@ -88,24 +97,27 @@ export function ColumnHeader({ column, projectCount, dragHandleProps }: ColumnHe
         </DropdownMenu>
       </div>
 
-      <EditColumnDialog 
-        column={column} 
-        open={isEditDialogOpen} 
-        onOpenChange={setIsEditDialogOpen} 
+      <EditColumnDialog
+        column={column}
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
       />
 
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Column</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the column "{column.name}"? 
-              Any projects in this column will also be deleted.
+              Are you sure you want to delete the column "{column.name}"? Any
+              projects in this column will also be deleted.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault();
                 handleDelete();

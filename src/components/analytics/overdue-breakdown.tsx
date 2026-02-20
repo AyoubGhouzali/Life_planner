@@ -27,7 +27,9 @@ export function OverdueBreakdown({ data }: OverdueBreakdownProps) {
           <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
             <AlertTriangle className="h-10 w-10 mb-2 opacity-50" />
             <p className="text-sm">No overdue tasks!</p>
-            <p className="text-xs mt-1">You&apos;re on top of your deadlines.</p>
+            <p className="text-xs mt-1">
+              You&apos;re on top of your deadlines.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -50,7 +52,11 @@ export function OverdueBreakdown({ data }: OverdueBreakdownProps) {
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                horizontal={true}
+                vertical={false}
+              />
               <XAxis
                 type="number"
                 fontSize={12}

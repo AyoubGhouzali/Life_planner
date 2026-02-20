@@ -15,7 +15,9 @@ interface AreaPageProps {
 export default async function AreaPage({ params }: AreaPageProps) {
   const { areaId } = await params;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
@@ -28,12 +30,14 @@ export default async function AreaPage({ params }: AreaPageProps) {
   }
 
   const defaultBoardId = area.boards[0]?.id;
-  const boardData = defaultBoardId ? await getBoardWithData(defaultBoardId) : null;
+  const boardData = defaultBoardId
+    ? await getBoardWithData(defaultBoardId)
+    : null;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <AreaHeader area={area} />
-      
+
       <div className="flex-1 overflow-hidden">
         {boardData ? (
           <div className="h-full p-6">
@@ -41,7 +45,9 @@ export default async function AreaPage({ params }: AreaPageProps) {
           </div>
         ) : (
           <div className="h-full flex flex-col items-center justify-center p-6 text-center">
-            <p className="text-muted-foreground mb-4">No boards found for this area.</p>
+            <p className="text-muted-foreground mb-4">
+              No boards found for this area.
+            </p>
             <Button>Create Board</Button>
           </div>
         )}

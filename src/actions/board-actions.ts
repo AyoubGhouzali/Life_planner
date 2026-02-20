@@ -9,7 +9,9 @@ import { revalidatePath } from "next/cache";
 
 export async function createBoard(formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const name = formData.get("name") as string;
@@ -18,11 +20,14 @@ export async function createBoard(formData: FormData) {
 
   const validated = boardSchema.parse({ name, description, areaId });
 
-  const [newBoard] = await db.insert(boards).values({
-    name: validated.name,
-    description: validated.description,
-    area_id: validated.areaId,
-  }).returning();
+  const [newBoard] = await db
+    .insert(boards)
+    .values({
+      name: validated.name,
+      description: validated.description,
+      area_id: validated.areaId,
+    })
+    .returning();
 
   // Create default columns
   await db.insert(columns).values([
@@ -37,7 +42,9 @@ export async function createBoard(formData: FormData) {
 
 export async function updateBoard(id: string, formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const name = formData.get("name") as string;
@@ -48,11 +55,11 @@ export async function updateBoard(id: string, formData: FormData) {
 
   const [updatedBoard] = await db
     .update(boards)
-    .set({ 
+    .set({
       name: validated.name,
       description: validated.description,
       area_id: validated.areaId,
-      updated_at: new Date() 
+      updated_at: new Date(),
     })
     .where(eq(boards.id, id))
     .returning();
@@ -63,7 +70,9 @@ export async function updateBoard(id: string, formData: FormData) {
 
 export async function deleteBoard(id: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) throw new Error("Unauthorized");
 
   const [deletedBoard] = await db

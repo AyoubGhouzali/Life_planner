@@ -1,17 +1,20 @@
 import { db } from "@/lib/db";
 import { habits, habitLogs, lifeAreas } from "@/lib/db/schema";
 import { eq, and, gte, lte, desc, sql } from "drizzle-orm";
-import { startOfDay, endOfDay, subDays, isSameDay, differenceInDays } from "date-fns";
+import {
+  startOfDay,
+  endOfDay,
+  subDays,
+  isSameDay,
+  differenceInDays,
+} from "date-fns";
 
 export async function getHabits(userId: string) {
   const todayStart = startOfDay(new Date());
   const todayEnd = endOfDay(new Date());
 
   const userHabits = await db.query.habits.findMany({
-    where: and(
-      eq(habits.user_id, userId),
-      eq(habits.is_archived, false)
-    ),
+    where: and(eq(habits.user_id, userId), eq(habits.is_archived, false)),
     with: {
       area: true,
       logs: {
@@ -20,9 +23,9 @@ export async function getHabits(userId: string) {
     },
   });
 
-  return userHabits.map(habit => {
-    const isCompletedToday = habit.logs.some(log => 
-      log.completed_at >= todayStart && log.completed_at <= todayEnd
+  return userHabits.map((habit) => {
+    const isCompletedToday = habit.logs.some(
+      (log) => log.completed_at >= todayStart && log.completed_at <= todayEnd,
     );
 
     const { currentStreak, bestStreak } = calculateStreaks(habit.logs);
@@ -37,22 +40,22 @@ export async function getHabits(userId: string) {
 }
 
 export async function getHabitById(habitId: string) {
-    return await db.query.habits.findFirst({
-        where: eq(habits.id, habitId),
-        with: {
-            area: true,
-            logs: {
-                orderBy: [desc(habitLogs.completed_at)],
-            }
-        }
-    });
+  return await db.query.habits.findFirst({
+    where: eq(habits.id, habitId),
+    with: {
+      area: true,
+      logs: {
+        orderBy: [desc(habitLogs.completed_at)],
+      },
+    },
+  });
 }
 
 export async function getTodaysHabits(userId: string) {
-    const habitsList = await getHabits(userId);
-    // For now, return all active habits. 
-    // In a real app, we'd filter by frequency config (e.g. only on Mon, Wed, Fri)
-    return habitsList;
+  const habitsList = await getHabits(userId);
+  // For now, return all active habits.
+  // In a real app, we'd filter by frequency config (e.g. only on Mon, Wed, Fri)
+  return habitsList;
 }
 
 function calculateStreaks(logs: any[]) {
@@ -60,7 +63,9 @@ function calculateStreaks(logs: any[]) {
 
   // Sort logs by date descending and remove duplicates for the same day
   const sortedUniqueLogs = Array.from(
-    new Map(logs.map(log => [startOfDay(log.completed_at).getTime(), log])).values()
+    new Map(
+      logs.map((log) => [startOfDay(log.completed_at).getTime(), log]),
+    ).values(),
   ).sort((a, b) => b.completed_at.getTime() - a.completed_at.getTime());
 
   let currentStreak = 0;
@@ -72,7 +77,7 @@ function calculateStreaks(logs: any[]) {
 
   // Calculate current streak
   const lastLogDate = startOfDay(sortedUniqueLogs[0].completed_at);
-  
+
   if (isSameDay(lastLogDate, today) || isSameDay(lastLogDate, yesterday)) {
     let checkDate = lastLogDate;
     for (const log of sortedUniqueLogs) {

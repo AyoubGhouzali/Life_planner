@@ -21,7 +21,15 @@ import {
 } from "@/components/ui/select";
 import { updateProject, deleteProject } from "@/actions/project-actions";
 import { toast } from "sonner";
-import { Calendar as CalendarIcon, Clock, Plus, Trash2, Tag, CheckSquare, X } from "lucide-react";
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  Plus,
+  Trash2,
+  Tag,
+  CheckSquare,
+  X,
+} from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { TaskList } from "@/components/tasks/task-list";
@@ -40,13 +48,17 @@ interface ProjectDetailProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProps) {
+export function ProjectDetail({
+  project,
+  open,
+  onOpenChange,
+}: ProjectDetailProps) {
   const [isPending, setIsPending] = useState(false);
   const [title, setTitle] = useState(project.title);
   const [description, setDescription] = useState(project.description || "");
   const [priority, setPriority] = useState(project.priority);
   const [dueDate, setDueDate] = useState<Date | undefined>(
-    project.due_date ? new Date(project.due_date) : undefined
+    project.due_date ? new Date(project.due_date) : undefined,
   );
   const [projectTags, setProjectTags] = useState<string[]>(project.tags || []);
   const [newTag, setNewTag] = useState("");
@@ -59,11 +71,13 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
       formData.append("description", updates.description ?? description);
       formData.append("priority", updates.priority || priority);
       formData.append("columnId", project.column_id);
-      const updatedDueDate = updates.dueDate !== undefined ? updates.dueDate : dueDate;
+      const updatedDueDate =
+        updates.dueDate !== undefined ? updates.dueDate : dueDate;
       if (updatedDueDate) {
         formData.append("dueDate", new Date(updatedDueDate).toISOString());
       }
-      const updatedTags = updates.tags !== undefined ? updates.tags : projectTags;
+      const updatedTags =
+        updates.tags !== undefined ? updates.tags : projectTags;
       formData.append("tags", JSON.stringify(updatedTags));
 
       await updateProject(project.id, formData);
@@ -77,7 +91,7 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
 
   async function handleDelete() {
     if (!confirm("Are you sure you want to delete this project?")) return;
-    
+
     setIsPending(true);
     try {
       await deleteProject(project.id);
@@ -98,20 +112,25 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
             <Badge variant="outline" className="uppercase font-bold">
               {project.column?.name || "Project"}
             </Badge>
-            <Button variant="ghost" size="icon" onClick={handleDelete} disabled={isPending}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleDelete}
+              disabled={isPending}
+            >
               <Trash2 className="h-4 w-4 text-destructive" />
             </Button>
           </div>
           <div className="space-y-1">
             <SheetTitle>Project Details</SheetTitle>
             <SheetDescription className="sr-only">
-                View and edit project details, tasks, and notes.
+              View and edit project details, tasks, and notes.
             </SheetDescription>
             <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                onBlur={() => handleUpdate({ title })}
-                className="text-2xl font-bold border-none px-0 focus-visible:ring-0 h-auto"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onBlur={() => handleUpdate({ title })}
+              className="text-2xl font-bold border-none px-0 focus-visible:ring-0 h-auto"
             />
           </div>
         </SheetHeader>
@@ -147,7 +166,11 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
               </label>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" size="sm" className="w-full h-8 text-xs justify-start font-normal">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full h-8 text-xs justify-start font-normal"
+                  >
                     {dueDate ? format(dueDate, "PPP") : "Set due date"}
                   </Button>
                 </PopoverTrigger>
@@ -187,10 +210,14 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
                 <CheckSquare className="h-4 w-4 mr-2" /> Tasks
               </h3>
               <Badge variant="secondary">
-                {project.tasks?.filter((t: any) => t.status === "done").length}/{project.tasks?.length || 0}
+                {project.tasks?.filter((t: any) => t.status === "done").length}/
+                {project.tasks?.length || 0}
               </Badge>
             </div>
-            <TaskList projectId={project.id} initialTasks={project.tasks || []} />
+            <TaskList
+              projectId={project.id}
+              initialTasks={project.tasks || []}
+            />
           </div>
 
           <Separator />
@@ -205,7 +232,11 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
             </h3>
             <div className="flex flex-wrap gap-2">
               {projectTags.map((tag: string) => (
-                <Badge key={tag} variant="secondary" className="text-[10px] gap-1">
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="text-[10px] gap-1"
+                >
                   {tag}
                   <button
                     onClick={() => {
@@ -221,7 +252,11 @@ export function ProjectDetail({ project, open, onOpenChange }: ProjectDetailProp
               ))}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" size="sm" className="h-6 px-2 text-[10px]">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-6 px-2 text-[10px]"
+                  >
                     <Plus className="h-3 w-3 mr-1" /> Add Tag
                   </Button>
                 </PopoverTrigger>
