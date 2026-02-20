@@ -149,7 +149,7 @@ describe("time-actions", () => {
 
   describe("deleteTimeEntry", () => {
     it("deletes a time entry", async () => {
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await deleteTimeEntry(TEST_UUID);
       expect(db.delete).toHaveBeenCalled();

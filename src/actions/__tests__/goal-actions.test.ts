@@ -127,7 +127,7 @@ describe("goal-actions", () => {
 
   describe("deleteGoal", () => {
     it("deletes a goal", async () => {
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await deleteGoal(TEST_UUID);
       expect(db.delete).toHaveBeenCalled();
@@ -163,7 +163,7 @@ describe("goal-actions", () => {
       (db.query.goals.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
         goal,
       );
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await unlinkProjectFromGoal(TEST_UUID, TEST_UUID_2);
       expect(db.delete).toHaveBeenCalled();

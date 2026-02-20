@@ -128,7 +128,7 @@ describe("note-actions", () => {
       (db.query.notes.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
         null,
       );
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await deleteNote(TEST_UUID);
       expect(db.delete).toHaveBeenCalled();

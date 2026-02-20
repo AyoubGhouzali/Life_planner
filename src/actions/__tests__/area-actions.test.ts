@@ -120,7 +120,7 @@ describe("area-actions", () => {
 
   describe("deleteArea", () => {
     it("deletes an area", async () => {
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await deleteArea(TEST_UUID);
       expect(db.delete).toHaveBeenCalled();
@@ -141,7 +141,7 @@ describe("area-actions", () => {
       (
         db.query.lifeAreas.findFirst as ReturnType<typeof vi.fn>
       ).mockResolvedValue(area);
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await archiveArea(TEST_UUID);
       expect(db.update).toHaveBeenCalled();
@@ -166,7 +166,7 @@ describe("area-actions", () => {
 
   describe("reorderAreas", () => {
     it("reorders areas", async () => {
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await reorderAreas([TEST_UUID]);
       expect(db.update).toHaveBeenCalled();

@@ -265,7 +265,7 @@ describe("task-actions", () => {
 
   describe("reorderTasks", () => {
     it("reorders tasks by updating positions", async () => {
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
       (db.query.tasks.findFirst as ReturnType<typeof vi.fn>).mockResolvedValue(
         null,
       );

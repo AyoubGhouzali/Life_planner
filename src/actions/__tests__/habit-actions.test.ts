@@ -120,7 +120,7 @@ describe("habit-actions", () => {
 
   describe("deleteHabit", () => {
     it("deletes a habit", async () => {
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await deleteHabit(TEST_UUID);
       expect(db.delete).toHaveBeenCalled();
@@ -143,7 +143,7 @@ describe("habit-actions", () => {
       (
         db.query.habitLogs.findFirst as ReturnType<typeof vi.fn>
       ).mockResolvedValue(existing);
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await logHabit(TEST_UUID);
       expect(db.update).toHaveBeenCalled();
@@ -160,7 +160,7 @@ describe("habit-actions", () => {
 
   describe("unlogHabit", () => {
     it("deletes habit log for the day", async () => {
-      mockWhere.mockResolvedValue(undefined);
+      mockWhere.mockResolvedValue(undefined as any);
 
       await unlogHabit(TEST_UUID);
       expect(db.delete).toHaveBeenCalled();
